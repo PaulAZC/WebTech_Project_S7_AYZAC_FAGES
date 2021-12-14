@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import {forwardRef, useImperativeHandle, useLayoutEffect, useRef} from 'react'
+import {forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext} from 'react'
 // Layout
 import { useTheme } from '@mui/styles';
 // Markdown
@@ -8,17 +8,10 @@ import { unified } from 'unified'
 import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
 import html from 'rehype-stringify'
-// Time
-import dayjs from 'dayjs'
-import calendar from 'dayjs/plugin/calendar'
-import updateLocale from 'dayjs/plugin/updateLocale'
-dayjs.extend(calendar)
-dayjs.extend(updateLocale)
-dayjs.updateLocale('en', {
-  calendar: {
-    sameElse: 'DD/MM/YYYY hh:mm A'
-  }
-})
+
+import Message from './Message';
+import Context from '../Context';
+
 
 const useStyles = (theme) => ({
   root: {
@@ -30,12 +23,6 @@ const useStyles = (theme) => ({
       'padding': 0,
       'textIndent': 0,
       'listStyleType': 0,
-    },
-  },
-  message: {
-    padding: '.2rem .5rem',
-    ':hover': {
-      backgroundColor: 'rgba(255,255,255,.05)',
     },
   },
   fabWrapper: {
@@ -55,8 +42,10 @@ export default forwardRef(({
   channel,
   messages,
   onScrollDown,
+  removeMessage,
 }, ref) => {
   const styles = useStyles(useTheme())
+  const {oauth,} = useContext(Context)
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll
@@ -83,6 +72,12 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
+
+  const deleteFct = (item)=>{
+    const data = messages.filter(i => i.creation !== item.creation)
+    removeMessage(data,item)
+  }
+
   return (
     <div css={styles.root} ref={rootEl}>
       <h1>Messages for {channel.name}</h1>
@@ -93,16 +88,14 @@ export default forwardRef(({
             .use(remark2rehype)
             .use(html)
             .processSync(message.content);
+            let deletable = false;
+            if(message.author === oauth.email){
+              deletable = true
+            }
             return (
-              <li key={i} css={styles.message}>
-                <p>
-                  <span>{message.author}</span>
-                  {' - '}
-                  <span>{dayjs().calendar(message.creation)}</span>
-                </p>
-                <div dangerouslySetInnerHTML={{__html: value}}>
-                </div>
-              </li>
+              <div key={i} >
+                <Message message={message} value={value} deleteFct={deleteFct} deletable={deletable}/>
+              </div>
             )
         })}
       </ul>

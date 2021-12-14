@@ -78,6 +78,13 @@ module.exports = {
         })
       })
     },
+    delete: async (channelId, messageId) => {
+      await db.del(`messages:${channelId}:${messageId}`,(err)=>{
+        if(err)
+          console.log(err)
+      })
+      return merge(channelId, creation);
+    }
   },
   users: {
     create: async (user) => {

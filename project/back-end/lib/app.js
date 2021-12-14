@@ -58,6 +58,11 @@ app.post('/channels/:id/messages', async (req, res) => {
   res.status(201).json(message)
 })
 
+app.delete('/channels/:id/message/:creation', async (req,res) => {
+  const message = await db.messages.delete(req.params.id, req.params.creation)
+  res.status(200).json(message)
+})
+
 // Users
 
 app.get('/users', async (req, res) => {
