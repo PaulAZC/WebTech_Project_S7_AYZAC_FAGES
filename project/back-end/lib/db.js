@@ -78,12 +78,20 @@ module.exports = {
         })
       })
     },
-    delete: async (channelId, messageId) => {
-      await db.del(`messages:${channelId}:${messageId}`,(err)=>{
+    delete: async (channelId, creation) => {
+      if(!creation) throw Error('Invalid message id')
+      await db.del(`messages:${channelId}:${creation}`,(err)=>{
         if(err)
           console.log(err)
       })
       return merge(channelId, creation);
+    },
+    put: async (channelId, creation, message) => {
+      await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
+        author: message.message.author,
+        content: message.message.content
+      }))
+      return merge(message, {channelId: channelId, creation: creation})
     }
   },
   users: {
