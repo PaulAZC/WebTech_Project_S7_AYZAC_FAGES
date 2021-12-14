@@ -8,6 +8,8 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import HeaderMenu from './HeaderMenu'
+
 // Rooter
 import {
   Route,
@@ -47,7 +49,9 @@ export default function App() {
   />)
   return (
     <div className="App" css={styles.root}>
-      <Header drawerToggleListener={drawerToggleListener}/>
+      <header>
+        {oauth ? <Header drawerToggleListener={drawerToggleListener}/> : <HeaderMenu/>}   
+      </header>
       <Routes>
         <Route exact path="/" element={oauth ? (gochannels) : (<Login />)}/>
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>

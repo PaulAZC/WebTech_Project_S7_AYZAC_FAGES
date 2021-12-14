@@ -34,7 +34,7 @@ const useStyles = (theme) => ({
   }
 })
 
-export default function Header({
+export default function HeaderMenu({
   drawerToggleListener
 }) {
   const styles = useStyles(useTheme())
@@ -59,38 +59,6 @@ export default function Header({
   };
   return (
     <header css={styles.header}>
-        <Avatar 
-          alt="{oauth.email} "
-          src="../public/default_avatar.jpg"
-          sx={{width: 35, height:35}}
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-        />
-        <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={onClickLogout}>Logout</MenuItem>
-      </Menu>
-      {/* <div>
-      {
-        oauth ?
-          <span>
-            {oauth.email}
-            <Link onClick={onClickLogout}>Logout</Link>
-          </span>
-        :
-          <span>new user</span>
-      }
-      </div> */}
-      
     </header>
   );
 }
