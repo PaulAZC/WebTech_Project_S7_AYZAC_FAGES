@@ -18,7 +18,6 @@ export const Provider = ({
     <Context.Provider value={{
       oauth: oauth,
       setOauth: (oauth) => {
-        console.log(oauth)
         if(oauth){
           const payload = JSON.parse(
             Buffer.from(

@@ -10,6 +10,7 @@ import Context from './Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
+import NewChannel from './NewChannel'
 import {
   Route,
   Routes,
@@ -58,6 +59,7 @@ export default function Main() {
         <Channels />
       </Drawer>
       <Routes>
+        <Route path="/create" element={<NewChannel/>}/>
         <Route path=":id" element={<Channel />}/>
         <Route path="*" element={<Welcome />}/>
       </Routes>
