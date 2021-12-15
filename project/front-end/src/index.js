@@ -13,8 +13,16 @@ import {
 } from "react-router-dom";
 
 const theme = createTheme({
-  palette: {
-    mode: 'dark',
+  components: {
+    MuiButton: {
+      variants: [{
+        props: {variant: 'bold'},
+        style:{
+          fondWeight: 'bold',
+          color: '#326e61'
+        }
+      }]
+    }
   }
 });
 

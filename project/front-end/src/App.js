@@ -9,6 +9,8 @@ import Main from './Main'
 import Login from './Login'
 import Context from './Context'
 import Register from './Register'
+import HeaderMenu from './HeaderMenu'
+
 // Rooter
 import {
   Route,
@@ -19,11 +21,12 @@ import {
 
 const styles = {
   root: {
+    width: '100%',
+    heigtht: '100%', 
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#565E71',
-    padding: '50px',
   },
 }
 
@@ -48,7 +51,9 @@ export default function App() {
   />)
   return (
     <div className="App" css={styles.root}>
-      <Header drawerToggleListener={drawerToggleListener}/>
+      <header>
+        {oauth ? <Header drawerToggleListener={drawerToggleListener}/> : <HeaderMenu/>}   
+      </header>
       <Routes>
         <Route exact path="/" element={oauth ? (gochannels) : (<Login />)}/>
         <Route path="/register" element={oauth ? (gochannels) : (<Register />)}/>
