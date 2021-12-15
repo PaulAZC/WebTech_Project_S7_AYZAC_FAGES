@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import {forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext} from 'react'
+import {forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext, useState} from 'react'
 // Layout
 import { useTheme } from '@mui/styles';
 // Markdown
@@ -9,8 +9,24 @@ import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
 import html from 'rehype-stringify'
 
-import Message from './Message';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+
 import Context from '../Context';
+// Time
+import dayjs from 'dayjs'
+import calendar from 'dayjs/plugin/calendar'
+import updateLocale from 'dayjs/plugin/updateLocale'
+dayjs.extend(calendar)
+dayjs.extend(updateLocale)
+dayjs.updateLocale('en', {
+  calendar: {
+    sameElse: 'DD/MM/YYYY hh:mm A'
+  }
+})
+
 
 
 const useStyles = (theme) => ({
@@ -36,6 +52,18 @@ const useStyles = (theme) => ({
     top: 0,
     width: '50px',
   },
+  message: {
+    padding: '.2rem .5rem',
+    ':hover': {
+      backgroundColor: 'rgba(255,255,255,.05)',
+    },
+  },
+  button:{
+    position: 'fixed',
+    left: "5%",
+    zIndex: 1,
+    backgroundColor: "black"
+  },
 })
 
 export default forwardRef(({
@@ -43,9 +71,12 @@ export default forwardRef(({
   messages,
   onScrollDown,
   removeMessage,
+  editMessage
 }, ref) => {
   const styles = useStyles(useTheme())
   const {oauth,} = useContext(Context)
+  const [actValue,setValue] = useState()
+  const [clicked,setClicked] = useState(null)
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll
@@ -72,10 +103,25 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
+  
+  const clickDelete = (message)=>{
+    const data = messages.filter(i => i.creation !== message.creation)
+    removeMessage(data,message)
+  }
 
-  const deleteFct = (item)=>{
-    const data = messages.filter(i => i.creation !== item.creation)
-    removeMessage(data,item)
+  const clickEdit = (index,message)=>{
+    setClicked(index)
+    setValue(message.content)
+  } 
+
+  const handleChange = (e)=>{
+    setValue(e.target.value)
+  }
+
+  const changeEdit = (i,sms)=>{
+    sms.content = actValue
+    editMessage(i,sms)
+    setClicked(null)
   }
 
   return (
@@ -93,9 +139,33 @@ export default forwardRef(({
               deletable = true
             }
             return (
-              <div key={i} >
-                <Message message={message} value={value} deleteFct={deleteFct} deletable={deletable}/>
-              </div>
+              <li key={i} css={styles.message}>
+                { deletable ?
+                (<div>
+                    <IconButton aria-label="delete" size="small" onClick={clickDelete.bind(this,message)}>
+                        <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="edit" size="small" onClick={clickEdit.bind(this,i,message)}>
+                        <EditIcon fontSize="inherit" />
+                    </IconButton>
+                </div>)
+                : (<p></p>) }
+                <p>
+                  <span>{message.author}</span>
+                  {' - '}
+                  <span>{dayjs().calendar(message.creation)}</span>
+                </p>
+                {clicked !== i ?
+                    <div dangerouslySetInnerHTML={{__html: value}}>
+                    </div>
+                    : <div>
+                        <input value={actValue} onChange={handleChange.bind(this)}/>
+                        <IconButton aria-label="edit" size="small" onClick={changeEdit.bind(this,i,message)}>
+                            <CheckIcon fontSize="inherit" />
+                        </IconButton>
+                    </div>
+                }
+              </li>
             )
         })}
       </ul>

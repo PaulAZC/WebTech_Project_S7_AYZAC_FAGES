@@ -8,6 +8,7 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import Register from './Register'
 import HeaderMenu from './HeaderMenu'
 
 // Rooter
@@ -55,6 +56,7 @@ export default function App() {
       </header>
       <Routes>
         <Route exact path="/" element={oauth ? (gochannels) : (<Login />)}/>
+        <Route path="/register" element={oauth ? (gochannels) : (<Register />)}/>
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>
         <Route path="/Oups" element={<Oups />} />
       </Routes>

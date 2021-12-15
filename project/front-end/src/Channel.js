@@ -40,11 +40,20 @@ export default function Channel() {
   const listRef = useRef()
   const [messages, setMessages] = useState([])
   const [scrollDown, setScrollDown] = useState(false)
+
   const removeMessage = async (messages,item) => {
     setMessages(messages)
     await axios.delete(`http://localhost:3001/channels/${channel.id}/message/${item.creation}`)
   }
-  const addMessage = (message) => {
+  const editMessage = async (i,message) => {
+    let newArr = [...messages];
+    newArr[i] = message;
+    setMessages(newArr);
+    await axios.put(`http://localhost:3001/channels/${channel.id}/message/${message.creation}`,{message});
+  }
+  
+
+  const addMessage = async (message) => {
     setMessages([...messages, message])
   }
   useEffect( () => {
@@ -83,6 +92,7 @@ export default function Channel() {
         onScrollDown={onScrollDown}
         ref={listRef}
         removeMessage={removeMessage}
+        editMessage={editMessage}
       />
       <Form addMessage={addMessage} channel={channel} />
       <Fab

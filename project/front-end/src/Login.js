@@ -7,7 +7,7 @@ import qs from 'qs'
 import axios from 'axios'
 // Layout
 import { useTheme } from '@mui/styles';
-import { Link } from '@mui/material';
+import { Link, Button } from '@mui/material';
 // Local
 import Context from './Context'
 import {
@@ -33,8 +33,7 @@ const useStyles = (theme) => ({
   root: {
     flex: '1 1 auto',
     display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: "#f0f0f0",
+    flexDirection: "column",
     justifyContent: 'center',
     alignItems: 'center',
     '& > div': {
@@ -57,6 +56,7 @@ const Redirect = ({
   codeVerifier,
 }) => {
   const styles = useStyles(useTheme())
+  const navigate = useNavigate();
   const redirect = (e) => {
     e.stopPropagation()
     const code_challenge = base64URLEncode(sha256(codeVerifier))
@@ -73,8 +73,11 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-      <Button onClick={redirect} variant="contained">Login with OAuth2</Button>
-      {/* //<Button variant='contained'>Register</Button> */}
+      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
+      <Button onClick={(e) => {e.preventDefault()
+                navigate(`/register`)}}>
+          Register a new account
+      </Button>
     </div>
   )
 }
@@ -153,7 +156,6 @@ export default function Login({
   if(!code){ // no: we are not being redirected from an oauth server
     if(!oauth){
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
-      console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
@@ -164,7 +166,6 @@ export default function Login({
       )
     }
   }else{ // yes: we are coming from an oauth server
-    console.log('get code_verifier', cookies.code_verifier)
     return (
       <LoadToken
         code={code}

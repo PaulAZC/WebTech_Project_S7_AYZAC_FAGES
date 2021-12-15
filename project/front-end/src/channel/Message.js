@@ -3,6 +3,7 @@ import { useTheme } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
 // Time
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
@@ -30,20 +31,37 @@ const useStyles = (theme) => ({
     },
 })
 
-const Message = ({message,value,deleteFct,deletable})=>{
+const Message = ({i,message,value,deletable,deleteFct,editFct})=>{
     const styles = useStyles(useTheme())
     const [showButton,setButton] = useState(false)
+    const [actValue,setValue] = useState(value)
+    const [onEdit,setEdit] = useState(true)
 
     const clickDelete = (e)=>{
         e.preventDefault()
         deleteFct(message)
     } 
 
+    const changeEdit = (e)=>{
+        e.preventDefault()
+        setEdit(true)
+        message.content = actValue
+        editFct(i,message)
+        
+    }
+
+    const handleChange = (e)=>{
+        setValue(e.target.value)
+    }
+
     const clickEdit = (e)=>{
         e.preventDefault()
-        console.log("oui")
+        let temp = actValue.replace('<p>','')
+        temp = temp.replace('</p>','')
+        setEdit(false)
+        setValue(temp)
     } 
-
+    console.log("message",message)
     return(
         <li css={styles.message} onMouseEnter={e =>setButton(true)} onMouseLeave={e=>setButton(false)}>
             { deletable ?
@@ -61,8 +79,16 @@ const Message = ({message,value,deleteFct,deletable})=>{
                 {' - '}
                 <span>{dayjs().calendar(message.creation)}</span>
             </p>
-            <div dangerouslySetInnerHTML={{__html: value}}>
-            </div>
+            {onEdit ?
+                <div dangerouslySetInnerHTML={{__html: actValue}}>
+                </div>
+                : <div>
+                    <input value={actValue} onChange={handleChange}/>
+                    <IconButton aria-label="edit" size="small" onClick={changeEdit}>
+                        <CheckIcon fontSize="inherit" />
+                    </IconButton>
+                </div>
+            }
         </li>
     )
 }
