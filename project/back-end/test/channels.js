@@ -3,14 +3,12 @@ const supertest = require('supertest')
 const app = require('../lib/app')
 const db = require('../lib/db')
 
-describe.skip('channels', () => {
+describe('channels', () => {
   
   beforeEach( async () => {
     await db.admin.clear()
   })
-  
-  describe( 'list', () => {
-  
+
     it('list empty', async () => {
       // Return an empty channel list by default
       const {body: channels} = await supertest(app)
@@ -33,8 +31,6 @@ describe.skip('channels', () => {
         name: 'channel 1'
       }])
     })
-    
-  })
   
   it('create one element', async () => {
     // Create a channel

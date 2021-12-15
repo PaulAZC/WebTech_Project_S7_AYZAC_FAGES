@@ -38,7 +38,7 @@
     "recursive": true
   },
   "scripts": {
-    "reset": "bin/reset",
+    "reset": "node bin/reset",
     "develop": "node bin/init && node bin/start",
     "start": "node bin/start",
     "test": "./node_modules/.bin/mocha 'test/**/*.js'"

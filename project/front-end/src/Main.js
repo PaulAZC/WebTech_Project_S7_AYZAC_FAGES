@@ -39,7 +39,6 @@ export default function Main() {
     // currentChannel, not yet used
     drawerVisible,
   } = useContext(Context)
-  
   const theme = useTheme()
   const styles = useStyles(theme)
   const alwaysOpen = useMediaQuery(theme.breakpoints.up('sm'))
@@ -59,7 +58,7 @@ export default function Main() {
         <Channels />
       </Drawer>
       <Routes>
-        <Route path="/create" element={<NewChannel/>}/>
+        <Route path="/create" element={<NewChannel />}/>
         <Route path=":id" element={<Channel />}/>
         <Route path="*" element={<Welcome />}/>
       </Routes>

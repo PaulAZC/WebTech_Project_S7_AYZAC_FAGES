@@ -1,9 +1,8 @@
 import { Button, Grid, TextField} from '@mui/material';
 import { useTheme } from '@mui/styles';
 import axios from 'axios';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Context from './Context';
 
 const useStyles = (theme) => ({
     grid: {
@@ -24,7 +23,7 @@ export default function Register(){
     const theme = useTheme()
     const styles = useStyles(theme)
     const navigate = useNavigate()
-    const {oauth, setOauth} = useContext(Context)
+    //const {oauth, setOauth} = useContext(Context)
     const [email,setEmail] = useState('')
     const [fname,setFirst] = useState('')
     const [lname,setLast] = useState('')
