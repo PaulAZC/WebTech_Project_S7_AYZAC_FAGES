@@ -1,7 +1,9 @@
 import { Button, Grid, TextField, Autocomplete, Chip } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Context from './Context';
 
 const useStyles = (theme) => ({
     top: {
@@ -16,15 +18,34 @@ const useStyles = (theme) => ({
     },
 })
 
-export default function NewChannel(){
+export default function NewChannel({changeState}){
+    const navigate = useNavigate();
     const [users,setUsers] = useState([]);
-    const [chooseUser,setChooseUser] = useState([])
-    const theme = useTheme()
-    const styles = useStyles(theme)
+    const [chooseUser,setChooseUser] = useState([]);
+    const [nameGroup,setName] = useState('');
+    const {channels, setChannels} = useContext(Context);
+    const theme = useTheme();
+    const styles = useStyles(theme);
 
-    const createGroup = (e) => {
+    const createGroup = async (e) => {
         e.preventDefault()
-        //comparaison
+        var regExp = /\(([^)]+)\)/;
+        for(let i=0;i<chooseUser.length;i++){
+            chooseUser[i] = users.find(e => e.email === regExp.exec(chooseUser[i])[1])
+            chooseUser[i] = chooseUser[i].id
+        }
+        if(chooseUser.length>1){
+            await axios.post('http://localhost:3001/channels',{
+                name: nameGroup,
+                users: chooseUser,
+            })
+            .then(res => {
+                setChannels([...channels,res.data])
+                navigate(`/channels/${res.data.id}`)
+            })
+            setName('')
+            setChooseUser([])
+        }
     }
 
     useEffect( () => {
@@ -48,14 +69,14 @@ export default function NewChannel(){
         >
             <form onSubmit={createGroup}>
             <Grid style={styles.grid}>
-                <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" required/>
+                <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e)=>setName(e.target.value)} error={nameGroup === ""} helperText={nameGroup === "" ? 'Empty field!' : ' '}required/>
             </Grid>
             <Grid>
             <Autocomplete
                 onChange={(event, value) => setChooseUser(value)}
                 multiple
                 id="tags-filled"
-                options={users.map((option) => option.firstName +" "+ option.lastName)}
+                options={users.map((option) => option.firstName +" "+ option.lastName +" ("+option.email+")")}
                 style={{width:"500px"}}
                 freeSolo
                 renderTags={(value, getTagProps) =>
@@ -69,6 +90,8 @@ export default function NewChannel(){
                         variant="filled"
                         label="Enter name"
                         placeholder="Name"
+                        error={chooseUser.length === 0}
+                        helperText={chooseUser.length === 0 ? 'Empty field!' : ' '}
                     />
                 )}
             />
