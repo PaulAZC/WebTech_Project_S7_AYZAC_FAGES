@@ -13,7 +13,7 @@ import Context from './Context'
 import {
   useNavigate
 } from "react-router-dom";
-import { Button } from '@mui/material';
+
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -30,11 +30,16 @@ const sha256 = (buffer) => {
 }
 
 const useStyles = (theme) => ({
+  button:{
+    paddingBottom: "20px"
+  },
   root: {
     flex: '1 1 auto',
     display: 'flex',
     flexDirection: "column",
     justifyContent: 'center',
+    backgroundColor: "#f0f0f0",
+    paddingBottom: "20px",
     alignItems: 'center',
     '& > div': {
       margin: `${theme.spacing(1)}`,
@@ -73,11 +78,13 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
-      <Button onClick={(e) => {e.preventDefault()
-                navigate(`/register`)}}>
-          Register a new account
-      </Button>
+      <div css={styles.button}>
+        <Button onClick={redirect} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
+      </div>
+        <Button variant="contained" onClick={(e) => {e.preventDefault()
+                  navigate(`/register`)}}>
+            Register a new account
+        </Button>
     </div>
   )
 }
