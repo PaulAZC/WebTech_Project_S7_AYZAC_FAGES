@@ -18,24 +18,25 @@ const useStyles = (theme) => ({
     },
 })
 
-export default function NewChannel({changeState}){
+export default function NewChannel(){
     const navigate = useNavigate();
     const [users,setUsers] = useState([]);
     const [chooseUser,setChooseUser] = useState([]);
     const [nameGroup,setName] = useState('');
-    const {channels, setChannels} = useContext(Context);
+    const {oauth, channels, setChannels} = useContext(Context);
     const theme = useTheme();
     const styles = useStyles(theme);
 
-    const createGroup = async (e) => {
+    const createGroup = (e) => {
         e.preventDefault()
         var regExp = /\(([^)]+)\)/;
         for(let i=0;i<chooseUser.length;i++){
             chooseUser[i] = users.find(e => e.email === regExp.exec(chooseUser[i])[1])
-            chooseUser[i] = chooseUser[i].id
+            chooseUser[i] = chooseUser[i].email
         }
+        chooseUser.push(oauth.email)
         if(chooseUser.length>1){
-            await axios.post('http://localhost:3001/channels',{
+            axios.post('http://localhost:3001/channels',{
                 name: nameGroup,
                 users: chooseUser,
             })
@@ -78,6 +79,7 @@ export default function NewChannel({changeState}){
                 id="tags-filled"
                 options={users.map((option) => option.firstName +" "+ option.lastName +" ("+option.email+")")}
                 style={{width:"500px"}}
+                filterSelectedOptions
                 freeSolo
                 renderTags={(value, getTagProps) =>
                     value.map((option, index) => (
