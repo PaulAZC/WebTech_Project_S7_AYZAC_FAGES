@@ -20,11 +20,12 @@ import {
 
 const styles = {
   root: {
+    width: '100%',
+    heigtht: '100%', 
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#565E71',
-    padding: '50px',
   },
 }
 
