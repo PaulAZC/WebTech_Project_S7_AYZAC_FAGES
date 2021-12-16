@@ -2,7 +2,6 @@
 /** @jsxImportSource @emotion/react */
 // Layout
 import { useTheme } from '@mui/styles';
-import chatLogo from './static/images/chat_icon.jpg'
 
 
 

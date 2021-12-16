@@ -19,7 +19,7 @@ import Context from '../Context';
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import updateLocale from 'dayjs/plugin/updateLocale'
-import { style } from '@mui/system';
+
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', {
@@ -55,7 +55,6 @@ const useStyles = (theme) => ({
   },
   messageAuthor: {
     padding: '.2rem .5rem',
-    marginLeft: "1em",
     marginBottom: "1.5em",
     //border: "solid 3px black",
     width: "50%",
@@ -65,7 +64,6 @@ const useStyles = (theme) => ({
     boxShadow: "rgb(38, 57, 77) 0px 20px 30px -10px",
     color: "#f0f0f0",
     display: "flex",
-    flexDirection: "raw",
     justifyContent: "space-between",
     flexDirection: "raw",
     transition: "0.5s",
@@ -88,13 +86,7 @@ const useStyles = (theme) => ({
     display: "flex",
     flexDirection: "raw",
     justifyContent: "space-between",
-    flexDirection: "raw",
     transition: "0.5s",
-    ':hover': {
-      backgroundColor: '#326e61',
-      color: "#f0f0f0",
-      transition: "0.5s",
-    },
   },
   button:{
     display: "flex",

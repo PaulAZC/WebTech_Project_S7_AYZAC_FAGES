@@ -1,12 +1,11 @@
 
 /** @jsxImportSource @emotion/react */
 import {useContext, useRef, useState, useEffect} from 'react';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import axios from 'axios';
 // Layout
 import { useTheme } from '@mui/material/styles';
-import {Fab, Button, Drawer, Toolbar, Typography, IconButton, AppBar} from '@mui/material';
+import { Button, Drawer, Toolbar, Typography, IconButton, AppBar} from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -38,14 +37,14 @@ const useStyles = (theme) => ({
   drawer: {
     position: "relative",
     marginLeft: "auto",
-    width: 200,
+    width: 240,
     "& .MuiBackdrop-root": {
       display: "none"
     },
     "& .MuiDrawer-paper": {
-      width: 200,
+      width: 240,
       position: "absolute",
-      height: 100,
+      height: 200,
       transition: "none !important"
     }
   }
@@ -129,7 +128,7 @@ export default function Channel() {
           backgroundColor: 'transparent',
           boxShadow: "0px 0px 0px 0px"
         }}>
-        <Toolbar>
+        <Toolbar sx={{borderBottom: '1px solid #326e61'}}>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} color="primary" component="div">
             {channel.name}
           </Typography>
@@ -155,13 +154,7 @@ export default function Channel() {
         </Toolbar>
       </AppBar>
       <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-          },
-        }}
+        style={styles.drawer}
         variant="persistent"
         open={open}
         anchor="right"
@@ -171,12 +164,12 @@ export default function Channel() {
         </IconButton>
         {channel.users.map((user,i)=>{
           return(
-            <li key={i}>
-              {user}
-            </li>
+              <Button >
+                {user}
+              </Button>
           );
         })}
-        <Button onClick={leaveChannel}>Leave Channel</Button>
+        <Button variant="contained" color="primary" onClick={leaveChannel}>Leave Channel</Button>
       </Drawer>
 
       <List
@@ -188,14 +181,6 @@ export default function Channel() {
         editMessage={editMessage}
       />
       <Form addMessage={addMessage} channel={channel} />
-      <Fab
-        color="primary"
-        aria-label="Latest messages"
-        css={[styles.fab, scrollDown || styles.fabDisabled]}
-        onClick={onClickScroll}
-      >
-        <ArrowDropDownIcon />
-      </Fab>
     </div>
   );
 }

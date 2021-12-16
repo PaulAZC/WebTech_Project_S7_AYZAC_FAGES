@@ -9,7 +9,6 @@ import { Avatar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import avatarDefault from './static/images/default_avatar.png'
-import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = (theme) => ({
