@@ -3,22 +3,38 @@
 import {useContext, useEffect} from 'react';
 import axios from 'axios';
 // Layout
-import {Link} from '@mui/material';
+import {Button, Link} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 // Local
 import Context from './Context'
 import {useNavigate} from 'react-router-dom'
+import { border, padding, ThemeProvider, width } from '@mui/system';
+import { useTheme } from '@mui/styles';
 
-const styles = {
+const drawerWidth = 240;
+
+const useStyles = (theme) => ({
   root: {
+    backgroundColor:'#121317',
     '& a': {
       padding: '.2rem .5rem',
       whiteSpace: 'nowrap', 
-    }
+    },
+    height: "100%",
+    width:"100%"
   },
-}
+  channel:{
+    display: "flex",
+    flexDirection: "row",
+    alignItem: "center",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+  }
+})
 
 export default function Channels() {
+
   const {
     oauth,
     channels, setChannels
@@ -42,22 +58,24 @@ export default function Channels() {
     }
     fetch()
   }, [oauth, setChannels])
+  const styles = useStyles(useTheme())
   return (
     <ul css={styles.root}>
       <li css={styles.channel}>
-        <Link to="/channels" component={RouterLink}>Welcome</Link>
+        <Button to="/channels" variant="contained" color="secondary" component={RouterLink}>Welcome</Button>
       </li>
       { channels.map( (channel, i) => (
         <li key={i} css={styles.channel}>
-          <Link
+          <Button
             href={`/channels/${channel.id}`}
             onClick={ (e) => {
               e.preventDefault()
               naviate(`/channels/${channel.id}`)
             }}
+            variant="contained" color="secondary"
           >
             {channel.name}
-          </Link>
+          </Button>
         </li>
       ))}
     </ul>

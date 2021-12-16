@@ -57,6 +57,7 @@ export default function App() {
       <Routes>
         <Route exact path="/" element={oauth ? (gochannels) : (<Login />)}/>
         <Route path="/register" element={oauth ? (gochannels) : (<Register />)}/>
+        {/* <Route path="/profile" element={oauth ? (gochannels) : (<Profile />)} /> */}
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>
         <Route path="/Oups" element={<Oups />} />
       </Routes>

@@ -30,7 +30,7 @@ const sha256 = (buffer) => {
 
 const useStyles = (theme) => ({
   button:{
-    paddingBottom: "20px"
+    marginBottom: theme.spacing(4)
   },
   root: {
     flex: '1 1 auto',
@@ -77,9 +77,7 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-      <div css={styles.button}>
-        <Button onClick={redirect} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
-      </div>
+        <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
         <Button variant="contained" onClick={(e) => {e.preventDefault()
                   navigate(`/register`)}}>
             Register a new account

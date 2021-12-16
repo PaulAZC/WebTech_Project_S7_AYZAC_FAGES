@@ -130,7 +130,7 @@ export default function Channel() {
           boxShadow: "0px 0px 0px 0px"
         }}>
         <Toolbar>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} color="primary" component="div">
             {channel.name}
           </Typography>
           <IconButton
@@ -138,6 +138,7 @@ export default function Channel() {
             aria-label="open drawer"
             edge="end"
             sx={{ ...(open && { display: 'none' }) }}
+            color="primary"
           >
             <PersonAddIcon />
           </IconButton>
@@ -147,6 +148,7 @@ export default function Channel() {
             edge="end"
             onClick={handleDrawerOpen}
             sx={{ ...(open && { display: 'none' }) }}
+            color="primary"
           >
             <MoreHorizIcon />
           </IconButton>

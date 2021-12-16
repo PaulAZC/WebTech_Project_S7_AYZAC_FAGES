@@ -19,15 +19,16 @@ dayjs.updateLocale('en', {
 const useStyles = (theme) => ({
     message: {
       padding: '.2rem .5rem',
+      display: "flex",
+      flexDirection: "raw",
       ':hover': {
-        backgroundColor: 'rgba(255,255,255,.05)',
+        backgroundColor: '#f0f0f0',
       },
     },
     button:{
       position: 'fixed',
       left: "5%",
       zIndex: 1,
-      backgroundColor: "black"
     },
 })
 
@@ -64,16 +65,6 @@ const Message = ({i,message,value,deletable,deleteFct,editFct})=>{
     console.log("message",message)
     return(
         <li css={styles.message} onMouseEnter={e =>setButton(true)} onMouseLeave={e=>setButton(false)}>
-            { deletable ?
-                <div style={{visibility: showButton ? 'visible' : 'hidden'}} css={styles.button} >
-                    <IconButton aria-label="delete" size="small" onClick={clickDelete}>
-                        <DeleteIcon fontSize="inherit" />
-                    </IconButton>
-                    <IconButton aria-label="edit" size="small" onClick={clickEdit}>
-                        <EditIcon fontSize="inherit" />
-                    </IconButton>
-                </div>
-                : <p></p> }
             <p>
                 <span>{message.author}</span>
                 {' - '}
@@ -89,6 +80,16 @@ const Message = ({i,message,value,deletable,deleteFct,editFct})=>{
                     </IconButton>
                 </div>
             }
+            { deletable ?
+                <div style={{visibility: showButton ? 'visible' : 'hidden'}} css={styles.button} >
+                    <IconButton aria-label="delete" size="small" onClick={clickDelete}>
+                        <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="edit" size="small" onClick={clickEdit}>
+                        <EditIcon fontSize="inherit" />
+                    </IconButton>
+                </div>
+                : <p></p> }
         </li>
     )
 }
