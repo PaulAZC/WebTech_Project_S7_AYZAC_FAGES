@@ -131,9 +131,9 @@ const config = {
     }))
   }))
   await Promise.all([{
-    email: "clement@email.com",
-    firstName: "clement",
-    lastName: "Fages",},
+      email: "clement@email.com",
+      firstName: "clement",
+      lastName: "Fages",},
     {
       email: "paul@email.com",
       firstName: "paul",

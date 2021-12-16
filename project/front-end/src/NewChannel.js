@@ -39,6 +39,10 @@ export default function NewChannel(){
             axios.post('http://localhost:3001/channels',{
                 name: nameGroup,
                 users: chooseUser,
+            },{
+                headers: {
+                    'Authorization': `Bearer ${oauth.access_token}`
+                },
             })
             .then(res => {
                 setChannels([...channels,res.data])
@@ -52,7 +56,11 @@ export default function NewChannel(){
     useEffect( () => {
         const fetch = async () => {
           try{
-            const {data: allUsers} = await axios.get(`http://localhost:3001/users`)
+            const {data: allUsers} = await axios.get(`http://localhost:3001/users`, {
+                headers: {
+                  'Authorization': `Bearer ${oauth.access_token}`
+                }
+            })
             console.log(allUsers)
             setUsers(allUsers)
           }catch(err){
@@ -60,7 +68,7 @@ export default function NewChannel(){
           }
         }
         fetch()
-    }, [])
+    }, [oauth])
 
     return(
         <Grid

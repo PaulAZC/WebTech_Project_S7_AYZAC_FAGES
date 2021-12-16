@@ -19,8 +19,6 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
   border: `1px solid`,
 }));
 
-const drawerWidth = 240;
-
 const useStyles = (theme) => ({
   root: {
     backgroundColor:'#f0f0f0',
