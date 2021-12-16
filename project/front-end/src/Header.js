@@ -9,13 +9,14 @@ import { Avatar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import avatarDefault from './static/images/default_avatar.png'
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = (theme) => ({
   avatar:{
     margin: "5px 5px 5px 5px"
   },
   header: {
-    height: '4em',
+    height: '3em',
     backgroundColor: '#326e61',
     display: 'flex',
     flexDirection: 'row',
@@ -44,7 +45,7 @@ export default function Header() {
     e.stopPropagation()
     setOauth(null)
   }
-
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -58,7 +59,7 @@ export default function Header() {
         <Avatar 
           alt={oauth.email}
           src={avatarDefault}
-          sx={{width: 50, height:50}}
+          sx={{width: 30, height:30}}
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
           style={styles.avatar}
@@ -72,7 +73,8 @@ export default function Header() {
             'aria-labelledby': 'basic-button',
         }}
         >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={(e) => {e.preventDefault()
+                  navigate(`/profile`)}}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>Settings</MenuItem>
         <MenuItem onClick={onClickLogout}>Logout</MenuItem>
       </Menu>

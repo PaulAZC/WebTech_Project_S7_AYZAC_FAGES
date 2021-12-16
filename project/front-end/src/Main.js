@@ -18,7 +18,8 @@ import {
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: 'green',
+    backgroundColor: '#f0f0f0',
+    color:"#326e61",
     overflow: 'hidden',
     flex: '1 1 auto',
     display: 'flex',
@@ -26,7 +27,7 @@ const useStyles = (theme) => ({
     position: 'relative',
   },
   drawer: {
-    width: '200px',
+    width: '10em',
     display: 'none',
   },
   drawerVisible: {

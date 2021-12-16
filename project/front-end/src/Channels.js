@@ -3,22 +3,50 @@
 import {useContext, useEffect} from 'react';
 import axios from 'axios';
 // Layout
-import {Link} from '@mui/material';
+import {Button} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 // Local
 import Context from './Context'
 import {useNavigate} from 'react-router-dom'
+import { useTheme } from '@mui/styles';
+import { Avatar, Badge } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const styles = {
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 15,
+  height: 15,
+  border: `1px solid`,
+}));
+
+const drawerWidth = 240;
+
+const useStyles = (theme) => ({
   root: {
-    '& a': {
-      padding: '.2rem .5rem',
-      whiteSpace: 'nowrap', 
-    }
+    backgroundColor:'#f0f0f0',
+    height: "100%",
+    width: "calc(100% - 7px)",
+    overflow: 'hidden',
+    borderRight: "solid 1px #326e61",
+    padding: "3px",
   },
-}
+  channel:{
+    display: "flex",
+    flexDirection: "row",
+    alignItem: "center",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+  },
+  listItem:{
+    backgroundColor: '#326e61',
+    color: '#f0f0f0',
+    boderRadius: "5px"
+  }
+})
 
 export default function Channels() {
+
   const {
     oauth,
     channels, setChannels
@@ -42,22 +70,37 @@ export default function Channels() {
     }
     fetch()
   }, [oauth, setChannels])
+  const styles = useStyles(useTheme())
   return (
     <ul css={styles.root}>
       <li css={styles.channel}>
-        <Link to="/channels" component={RouterLink}>Welcome</Link>
+        <Button to="/channels" variant="contained" color="primary" component={RouterLink}>Welcome</Button>
       </li>
       { channels.map( (channel, i) => (
         <li key={i} css={styles.channel}>
-          <Link
+          <Button
             href={`/channels/${channel.id}`}
             onClick={ (e) => {
               e.preventDefault()
               naviate(`/channels/${channel.id}`)
             }}
+            variant="contained" color="primary"
           >
+            <Badge
+              overlap="circular"
+              style={{marginRight: '7px'}}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={
+                <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+              }
+            >
+              <Avatar
+                    alt={`Avatar`}
+                    sx={{width:'30px', height:"30px", margin: '2px'}}
+              />
+            </Badge>
             {channel.name}
-          </Link>
+          </Button>
         </li>
       ))}
     </ul>

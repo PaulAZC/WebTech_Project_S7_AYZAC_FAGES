@@ -53,6 +53,7 @@ export default function NewChannel(){
         const fetch = async () => {
           try{
             const {data: allUsers} = await axios.get(`http://localhost:3001/users`)
+            console.log(allUsers)
             setUsers(allUsers)
           }catch(err){
             console.log(err)

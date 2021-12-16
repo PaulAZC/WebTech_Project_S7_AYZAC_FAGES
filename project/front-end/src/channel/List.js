@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import {forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext, useState} from 'react'
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext, useState } from 'react'
 // Layout
 import { useTheme } from '@mui/styles';
 // Markdown
@@ -19,6 +19,7 @@ import Context from '../Context';
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import updateLocale from 'dayjs/plugin/updateLocale'
+
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', {
@@ -52,18 +53,45 @@ const useStyles = (theme) => ({
     top: 0,
     width: '50px',
   },
-  message: {
+  messageAuthor: {
     padding: '.2rem .5rem',
+    marginBottom: "1.5em",
+    //border: "solid 3px black",
+    width: "50%",
+    marginLeft: "47%",
+    borderRadius: "15px",
+    backgroundColor: '#326e61',
+    boxShadow: "rgb(38, 57, 77) 0px 20px 30px -10px",
+    color: "#f0f0f0",
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "raw",
+    transition: "0.5s",
     ':hover': {
-      backgroundColor: 'rgba(255,255,255,.05)',
+      backgroundColor: '#f0f0f0',
+      color: "#326e61",
+      transition: "0.5s",
     },
   },
-  button:{
-    position: 'fixed',
-    left: "5%",
-    zIndex: 1,
-    backgroundColor: "black"
+  messageOther: {
+    padding: '.2rem .5rem',
+    marginLeft: "1em",
+    marginBottom: "1.5em",
+    //border: "solid 3px black",
+    width: "50%",
+    borderRadius: "15px",
+    backgroundColor: '#f0f0f0',
+    boxShadow: "rgb(38, 57, 77) 0px 20px 30px -10px",
+    color: "#326e61",
+    display: "flex",
+    flexDirection: "raw",
+    justifyContent: "space-between",
+    transition: "0.5s",
   },
+  button:{
+    display: "flex",
+    flexDirection: "column"
+  }
 })
 
 export default forwardRef(({
@@ -74,9 +102,9 @@ export default forwardRef(({
   editMessage
 }, ref) => {
   const styles = useStyles(useTheme())
-  const {oauth,} = useContext(Context)
-  const [actValue,setValue] = useState()
-  const [clicked,setClicked] = useState(null)
+  const { oauth, } = useContext(Context)
+  const [actValue, setValue] = useState()
+  const [clicked, setClicked] = useState(null)
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll
@@ -88,13 +116,13 @@ export default forwardRef(({
   }
   // See https://dev.to/n8tb1t/tracking-scroll-position-with-react-hooks-3bbj
   const throttleTimeout = useRef(null) // react-hooks/exhaustive-deps
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     const rootNode = rootEl.current // react-hooks/exhaustive-deps
     const handleScroll = () => {
       if (throttleTimeout.current === null) {
         throttleTimeout.current = setTimeout(() => {
           throttleTimeout.current = null
-          const {scrollTop, offsetHeight, scrollHeight} = rootNode // react-hooks/exhaustive-deps
+          const { scrollTop, offsetHeight, scrollHeight } = rootNode // react-hooks/exhaustive-deps
           onScrollDown(scrollTop + offsetHeight < scrollHeight)
         }, 200)
       }
@@ -103,69 +131,73 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
-  
-  const clickDelete = (message)=>{
+
+  const clickDelete = (message) => {
     const data = messages.filter(i => i.creation !== message.creation)
-    removeMessage(data,message)
+    removeMessage(data, message)
   }
 
-  const clickEdit = (index,message)=>{
+  const clickEdit = (index, message) => {
     setClicked(index)
     setValue(message.content)
-  } 
+  }
 
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     setValue(e.target.value)
   }
 
-  const changeEdit = (i,sms)=>{
+  const changeEdit = (i, sms) => {
     sms.content = actValue
-    editMessage(i,sms)
+    editMessage(i, sms)
     setClicked(null)
   }
 
   return (
     <div css={styles.root} ref={rootEl}>
       <ul>
-        { messages.map( (message, i) => {
-            const {value} = unified()
+        {messages.map((message, i) => {
+          const { value } = unified()
             .use(markdown)
             .use(remark2rehype)
             .use(html)
             .processSync(message.content);
-            let deletable = false;
-            if(message.author === oauth.email){
-              deletable = true
-            }
-            return (
-              <li key={i} css={styles.message}>
-                { deletable ?
-                (<div>
-                    <IconButton aria-label="delete" size="small" onClick={clickDelete.bind(this,message)}>
-                        <DeleteIcon fontSize="inherit" />
-                    </IconButton>
-                    <IconButton aria-label="edit" size="small" onClick={clickEdit.bind(this,i,message)}>
-                        <EditIcon fontSize="inherit" />
-                    </IconButton>
-                </div>)
-                : (<p></p>) }
+          let deletable = false;
+          let messageStyle = styles.messageOther
+          if (message.author === oauth.email) {
+            deletable = true
+            messageStyle = styles.messageAuthor
+          }
+          return (
+            <li key={i} css={messageStyle}>
+              <div>
                 <p>
                   <span>{message.author}</span>
                   {' - '}
                   <span>{dayjs().calendar(message.creation)}</span>
                 </p>
                 {clicked !== i ?
-                    <div dangerouslySetInnerHTML={{__html: value}}>
-                    </div>
-                    : <div>
-                        <input value={actValue} onChange={handleChange.bind(this)}/>
-                        <IconButton aria-label="edit" size="small" onClick={changeEdit.bind(this,i,message)}>
-                            <CheckIcon fontSize="inherit" />
-                        </IconButton>
-                    </div>
+                  <div dangerouslySetInnerHTML={{ __html: value }}>
+                  </div>
+                  : <div>
+                    <input value={actValue} onChange={handleChange.bind(this)} />
+                    <IconButton aria-label="edit" size="small" onClick={changeEdit.bind(this, i, message)}>
+                      <CheckIcon fontSize="inherit" />
+                    </IconButton>
+                  </div>
                 }
-              </li>
-            )
+              </div>
+              {deletable ?
+                (<div style={styles.button}>
+                  <IconButton aria-label="delete" size="small" onClick={clickDelete.bind(this, message)}>
+                    <DeleteIcon fontSize="inherit" color='error' />
+                  </IconButton>
+                  <IconButton aria-label="edit" size="small" onClick={clickEdit.bind(this, i, message)}>
+                    <EditIcon fontSize="inherit" color='error' />
+                  </IconButton>
+                </div>)
+                : (<p></p>)}
+            </li>
+          )
         })}
       </ul>
       <div ref={scrollEl} />

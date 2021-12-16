@@ -2,13 +2,12 @@
 /** @jsxImportSource @emotion/react */
 // Layout
 import { useTheme } from '@mui/styles';
-import chatLogo from './static/images/chat_icon.jpg'
 
 
 
 const useStyles = (theme) => ({
   header: {
-    height: '4em',
+    height: '3em',
     backgroundColor: '#326e61',
     display: 'flex',
     flexDirection: 'row',
@@ -32,7 +31,6 @@ export default function HeaderMenu() {
   const styles = useStyles(useTheme())
   return (
     <header css={styles.header}>
-        {/* <img alt="chat logo" src={chatLogo}/> */}
     </header>
   );
 }
