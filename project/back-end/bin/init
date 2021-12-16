@@ -91,7 +91,7 @@ const config = {
     }]
   },{
     name: 'Channel 2',
-    users:[],
+    users:['clement.fages@edu.ece.fr'],
     messages: [{
       author: 'sergei',
       creation: 1602223579200,

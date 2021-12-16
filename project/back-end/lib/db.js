@@ -56,7 +56,19 @@ module.exports = {
           users: val
         }))
       })
-    }
+    },
+    updateUser: async (id, users) => {
+      await db.get(`channels:${id}`,async (err,data)=>{
+        data = JSON.parse(data)
+        users.users.map((user) => {
+          data.users = [...data.users,user]
+        })
+        await db.put(`channels:${id}`, JSON.stringify({
+          name: data.name,
+          users: data.users
+        }))
+      })
+    },
   },
   messages: {
     create: async (channelId, message) => {
@@ -103,7 +115,7 @@ module.exports = {
         content: message.message.content
       }))
       return merge(message, {channelId: channelId, creation: creation})
-    }
+    },
   },
   users: {
     create: async (user) => {

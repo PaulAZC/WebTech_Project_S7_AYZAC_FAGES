@@ -6,10 +6,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import axios from 'axios';
 // Layout
 import { useTheme } from '@mui/material/styles';
-import {Fab, Button, Drawer, Toolbar, Typography, IconButton, AppBar} from '@mui/material';
+import {Fab, Button, Drawer, Toolbar, Typography, IconButton, AppBar, Popper, Box, Autocomplete, TextField, Chip} from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
 // Local
 import Form from './channel/Form'
 import List from './channel/List'
@@ -59,10 +61,16 @@ export default function Channel() {
   const styles = useStyles(useTheme())
   const listRef = useRef()
   const [messages, setMessages] = useState([])
+  const [users, setUsers] = useState([])
   const [scrollDown, setScrollDown] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [chooseUser,setChooseUser] = useState([]);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
+  const open2 = Boolean(anchorEl);
+  const id2 = open2 ? 'simple-popper' : undefined;
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -71,6 +79,10 @@ export default function Channel() {
     setOpen(false);
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+  
   const leaveChannel = async () => {
     const data = channels.filter(i => i.id !== channel.id)
     setChannels(data);
@@ -92,6 +104,24 @@ export default function Channel() {
   const addMessage = async (message) => {
     setMessages([...messages, message])
   }
+
+  const addPeople = (e) => {
+    e.preventDefault()
+    var regExp = /\(([^)]+)\)/;
+    for(let i=0;i<chooseUser.length;i++){
+        chooseUser[i] = users.find(e => e.email === regExp.exec(chooseUser[i])[1])
+        chooseUser[i] = chooseUser[i].email
+        channel.users.push(chooseUser[i])
+        const index = users.findIndex(item => item.email === chooseUser[i])
+        if(index > -1)
+          users.splice(index,1)
+    }
+    axios.put(`http://localhost:3001/channels/${channel.id}/users`, {
+      users: chooseUser
+    })
+    setAnchorEl()
+}
+
   useEffect( () => {
     const fetch = async () => {
       try{
@@ -110,6 +140,22 @@ export default function Channel() {
     }
     fetch()
   }, [id, oauth, navigate])
+
+  useEffect(()=>{
+      const fetch = async () => {
+        try{
+          await axios.get(`http://localhost:3001/users`)
+          .then(res => {
+            const difference = res.data.filter(e => !channel.users.includes(e.email))
+            setUsers(difference)
+          })
+        }catch(err){
+          console.log(err)
+        }
+      }
+      if(channel)
+        fetch()
+  },[channel])
 
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown)
@@ -133,14 +179,50 @@ export default function Channel() {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
             {channel.name}
           </Typography>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="end"
-            sx={{ ...(open && { display: 'none' }) }}
-          >
-            <PersonAddIcon />
-          </IconButton>
+          <div>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="end"
+              onClick={handleClick}
+            >
+              {open2 ? <CancelIcon/> : <PersonAddIcon/>} 
+            </IconButton>
+            <Popper id={id2} open={open2} anchorEl={anchorEl}>
+              <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper', display: 'flex-inline', flexDirection: 'row' }}>
+                <Autocomplete
+                  onChange={(event, value) => setChooseUser(value)}
+                  multiple
+                  id="tags-filled"
+                  options={users.map((option) => option.firstName +" "+ option.lastName +" ("+option.email+")")}
+                  style={{width:"300px"}}
+                  filterSelectedOptions
+                  freeSolo
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                    ))
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="filled"
+                        label="Enter name"
+                        placeholder="Name"
+                    />
+                  )}
+                />
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="end"
+                  onClick={addPeople}
+                >
+                  <AddIcon/>
+                </IconButton>
+              </Box>
+            </Popper>
+          </div>
           <IconButton
             color="inherit"
             aria-label="open drawer"
