@@ -16,6 +16,12 @@ const useStyles = (theme) => ({
     root:{
         width: "50%"
     },
+    form:{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 })
 
 export default function NewChannel(){
@@ -69,7 +75,7 @@ export default function NewChannel(){
             justifyContent="center"
             alignItems="center"
         >
-            <form onSubmit={createGroup}>
+            <form onSubmit={createGroup} >
             <Grid style={styles.grid}>
                 <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e)=>setName(e.target.value)} error={nameGroup === ""} helperText={nameGroup === "" ? 'Empty field!' : ' '}required/>
             </Grid>

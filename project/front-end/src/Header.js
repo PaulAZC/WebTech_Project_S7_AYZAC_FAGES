@@ -8,12 +8,13 @@ import Context from './Context';
 import { Avatar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import avatarDefault from './static/images/default_avatar.png'
+import Gravatar from 'react-gravatar'
 import { useNavigate } from 'react-router-dom';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const useStyles = (theme) => ({
-  avatar:{
-    margin: "5px 5px 5px 5px"
+  avatar: {
+    margin: "5px 10px 5px 5px"
   },
   header: {
     height: '3em',
@@ -23,17 +24,11 @@ const useStyles = (theme) => ({
     alignItem: 'center',
     justifyContent: 'flex-end'
   },
-  headerLogIn: {
-    backgroundColor: 'red',
-  },
-  headerLogOut: {
-    backgroundColor: 'blue',
-  },
   menu: {
     [theme.breakpoints.up('sm')]: {
       display: 'none !important',
     },
-  }
+  },
 })
 
 export default function Header() {
@@ -56,26 +51,27 @@ export default function Header() {
   };
   return (
     <header css={styles.header}>
-        <Avatar 
-          alt={oauth.email}
-          src={avatarDefault}
-          sx={{width: 30, height:30}}
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-          style={styles.avatar}
-        />
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
+      <ExpandMoreIcon onClick={handleClick} sx={{marginTop: "5px" }} />
+      <Avatar style={styles.avatar}>
+      <Gravatar
+        email={oauth.email}
+        sx={{ width: 30, height: 30 }}
+        onClick={handleClick}
+      />
+      </Avatar> 
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
         }}
-        >
-        <MenuItem onClick={(e) => {e.preventDefault()
-                  navigate(`/profile`)}}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+      >
+        <MenuItem onClick={(e) => {
+              e.preventDefault()
+              navigate(`/settings`)
+            }}>Settings</MenuItem>
         <MenuItem onClick={onClickLogout}>Logout</MenuItem>
       </Menu>
     </header>
