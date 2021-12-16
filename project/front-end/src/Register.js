@@ -6,7 +6,13 @@ import { useNavigate } from 'react-router-dom';
 
 const useStyles = (theme) => ({
     grid: {
-        padding: 15,
+        paddingBottom: 20,
+        color: "#326e61",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",   
+        font:"2em bold"     
     },
     root:{
         width: "50%"
@@ -39,6 +45,7 @@ export default function Register(){
             direction="column"
             justifyContent="center"
             alignItems="center"
+            marginTop="4em"
         >
             <Grid style={styles.grid}>
                 Register
