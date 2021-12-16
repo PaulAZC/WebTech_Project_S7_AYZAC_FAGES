@@ -8,11 +8,15 @@ import Context from './Context';
 import { Avatar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import avatarDefault from './static/images/default_avatar.png'
 
 const useStyles = (theme) => ({
+  avatar:{
+    margin: "5px 5px 5px 5px"
+  },
   header: {
-    //padding: theme.spacing(1),
-    backgroundColor: 'rgba(255,255,0,.3)',
+    height: '4em',
+    backgroundColor: '#326e61',
     display: 'flex',
     flexDirection: 'row',
     alignItem: 'center',
@@ -53,10 +57,11 @@ export default function Header() {
     <header css={styles.header}>
         <Avatar 
           alt={oauth.email}
-          src={require('./static/images/default_avatar.jpg')}
-          sx={{width: 35, height:35}}
+          src={avatarDefault}
+          sx={{width: 50, height:50}}
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
+          style={styles.avatar}
         />
         <Menu
           id="basic-menu"
