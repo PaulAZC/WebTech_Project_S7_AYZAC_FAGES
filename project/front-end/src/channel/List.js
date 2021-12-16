@@ -126,7 +126,6 @@ export default forwardRef(({
 
   return (
     <div css={styles.root} ref={rootEl}>
-      <h1>Messages for {channel.name}</h1>
       <ul>
         { messages.map( (message, i) => {
             const {value} = unified()

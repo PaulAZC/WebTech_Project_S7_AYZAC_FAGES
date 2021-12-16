@@ -14,7 +14,6 @@ import {
   useNavigate
 } from "react-router-dom";
 
-
 const base64URLEncode = (str) => {
   return str.toString('base64')
     .replace(/\+/g, '-')

@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', authenticate, async (req, res) => {
-  const channels = await db.channels.list()
+  const channels = await db.channels.list(req.user.email)
   res.json(channels)
 })
 
@@ -38,6 +38,11 @@ app.get('/channels/:id', async (req, res) => {
 
 app.put('/channels/:id', async (req, res) => {
   const channel = await db.channels.update(req.body)
+  res.json(channel)
+})
+
+app.delete('/channels/:id/user/:user',async (req, res) => {
+  const channel = await db.channels.deleteUser(req.params.id,req.params.user)
   res.json(channel)
 })
 
