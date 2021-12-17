@@ -29,14 +29,14 @@ export default function Register(){
     const [fname,setFirst] = useState('')
     const [lname,setLast] = useState('')
     const {oauth,} = useContext(Context);
-    console.log(oauth)
     const register = async (e) =>{
         e.preventDefault()
         //setOauth(email)
         await axios.post('http://localhost:3001/users', {
             email: email,
             firstName: fname,
-            lastName: lname
+            lastName: lname,
+            channels: []
         },{
             headers: {
                 'Authorization': `Bearer ${oauth.access_token}`

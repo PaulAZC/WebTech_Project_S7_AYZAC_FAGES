@@ -44,9 +44,17 @@ export default function NewChannel(){
                     'Authorization': `Bearer ${oauth.access_token}`
                 },
             })
-            .then(res => {
+            .then(async res => {
                 setChannels([...channels,res.data])
                 navigate(`/channels/${res.data.id}`)
+                for(let i=0;i<chooseUser.length;i++)
+                    await axios.post(`http://localhost:3001/users/channel/${res.data.id}`,{
+                        user: chooseUser[i]
+                    },{
+                        headers: {
+                          'Authorization': `Bearer ${oauth.access_token}`
+                        }
+                    })
             })
             setName('')
             setChooseUser([])
@@ -61,7 +69,6 @@ export default function NewChannel(){
                   'Authorization': `Bearer ${oauth.access_token}`
                 }
             })
-            console.log(allUsers)
             setUsers(allUsers)
           }catch(err){
             console.log(err)

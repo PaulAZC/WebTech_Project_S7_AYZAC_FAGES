@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', authenticate, async (req, res) => {
-  console.log(req.headers)
   const channels = await db.channels.list(req.user.email)
   res.json(channels)
 })
@@ -88,13 +87,28 @@ app.get('/users', authenticate, async (req, res) => {
   res.json(users)
 })
 
+app.get('/user/:id/channels', authenticate, async (req, res) => {
+  const channels = await db.users.getChannels(req.params.id)
+  res.json(channels)
+})
+
 app.post('/users', async (req, res) => {
   const user = await db.users.create(req.body)
   res.status(201).json(user)
 })
 
-app.get('/users/:id', async (req, res) => {
-  const user = await db.users.get(req.params.id)
+app.post('/users/channel/:id', async (req, res) => {
+  const user = await db.users.addChannel(req.params.id,req.body)
+  res.status(201).json(user)
+})
+
+app.delete('/user/:user/channel/:id', authenticate, async (req, res) => {
+  const user = await db.users.removeChannel(req.params.user,req.params.id)
+  res.status(200).json(user)
+})
+
+app.get('/user/:email', async (req, res) => {
+  const user = await db.users.get(req.params.email)
   res.json(user)
 })
 

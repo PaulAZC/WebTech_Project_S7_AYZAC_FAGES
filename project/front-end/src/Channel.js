@@ -87,6 +87,13 @@ export default function Channel() {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
       }
+    })
+    .then(async () => {
+      await axios.delete(`http://localhost:3001/user/${oauth.id}/channel/${channel.id}`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
     });
     navigate('/channels')
   }
@@ -99,6 +106,7 @@ export default function Channel() {
       }
     })
   }
+
   const editMessage = async (i,message) => {
     let newArr = [...messages];
     newArr[i] = message;
@@ -134,8 +142,18 @@ export default function Channel() {
         'Authorization': `Bearer ${oauth.access_token}`
       },
     })
+    .then(async res => {
+      for(let i=0;i<chooseUser.length;i++)
+        await axios.post(`http://localhost:3001/users/channel/${res.data.id}`,{
+            user: chooseUser[i]
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            }
+        })
+    })
     setAnchorEl()
-}
+  }
 
   useEffect( () => {
     const fetch = async () => {
@@ -184,6 +202,20 @@ export default function Channel() {
   }
   // On refresh, context.channel is not yet initialized
   if(!channel){
+    const check = async () => {
+      await axios.get(`http://localhost:3001/user/${oauth.id}/channels`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      .then(res => {
+        var n = window.location.href.lastIndexOf('/');
+        var str = window.location.href.substring(n+1)
+        if(!res.data.includes(str))
+          navigate('/oups')
+      })
+    }
+    check()
     return (<div>loading</div>)
   }
   return (
