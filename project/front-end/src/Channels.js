@@ -74,9 +74,6 @@ export default function Channels() {
   const styles = useStyles(useTheme())
   return (
     <ul css={styles.root}>
-      <li css={styles.channel}>
-        <Button to="/channels" variant="contained" color="primary" component={RouterLink}>Welcome</Button>
-      </li>
       {channels.map((channel, i) => (
         <li key={i} css={styles.channel}>
           <Button

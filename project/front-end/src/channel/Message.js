@@ -18,7 +18,6 @@ dayjs.updateLocale('en', {
 
 const useStyles = (theme) => ({
     message: {
-      padding: '.2rem .5rem',
       display: "flex",
       flexDirection: "raw",
       ':hover': {

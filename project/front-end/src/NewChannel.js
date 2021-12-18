@@ -6,21 +6,17 @@ import axios from 'axios';
 import Context from './Context';
 
 const useStyles = (theme) => ({
-    top: {
-        position: 'fixed',
-        top: "15%"
-    },
     grid: {
-        padding: 25,
-    },
-    root:{
-        width: "50%"
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "100%",
     },
     form:{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }
 })
 
@@ -70,13 +66,10 @@ export default function NewChannel(){
 
     return(
         <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
+            style={styles.grid}
         >
-            <form onSubmit={createGroup} >
-            <Grid style={styles.grid}>
+            <form onSubmit={createGroup}>
+            <Grid >
                 <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e)=>setName(e.target.value)} error={nameGroup === ""} helperText={nameGroup === "" ? 'Empty field!' : ' '}required/>
             </Grid>
             <Grid>
