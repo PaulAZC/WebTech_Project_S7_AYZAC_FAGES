@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useContext } from 'react';
 import Context from './Context';
 import { useTheme } from '@mui/styles';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, ListItemIcon, ListItemText } from '@mui/material';
 import Gravatar from 'react-gravatar';
 import { Slide } from '@mui/material';
 import { Dialog, DialogContent } from '@mui/material';
@@ -16,7 +16,11 @@ import avatar2 from './static/images/avatar_2.png'
 import avatar3 from './static/images/avatar_3.png'
 import avatar4 from './static/images/avatar_4.png'
 import { useNavigate } from 'react-router-dom';
-
+import { styled } from '@mui/material/styles';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import PasswordIcon from '@mui/icons-material/Password';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const useStyles = (theme) => ({
     settings: {
@@ -33,6 +37,11 @@ const useStyles = (theme) => ({
     },
     avatarButton: {
         margin: 10,
+    }, 
+    data:{
+        display: 'flex', 
+        justifyContent: 'center',
+        marginBottom: 10
     }
 })
 
@@ -40,6 +49,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const Input = styled('input')({
+    display: 'none',
+});
 
 export default function Settings() {
     const navigate = useNavigate()
@@ -138,6 +150,12 @@ export default function Settings() {
                                 </DialogContent>
                             </Dialog>
                         </div>
+                        <label htmlFor="contained-button-file">
+                            <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                            <Button variant="contained" component="span" size='small'>
+                                Upload an avatar
+                            </Button>
+                        </label>
                     </AccordionDetails>
                 </Accordion>
                 <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -165,10 +183,31 @@ export default function Settings() {
                     >
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Personal data</Typography>
                     </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography>
-                            
-                        </Typography>
+                    <AccordionDetails sx={{display: 'flex', flexDirection:'column', justifyContent:'center', paddingBottom:3}}>
+                        <div style={styles.data}>
+                            <AlternateEmailIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <Typography sx={{color:'#326e61'}}>
+                                {oauth.email}
+                            </Typography>
+                        </div>
+                        <div style={styles.data}>
+                            <AccountCircleIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <Typography sx={{color:'#326e61'}}>
+                                Username
+                            </Typography>
+                        </div>
+                        <div style={styles.data}>
+                            <PasswordIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <Typography sx={{color:'#326e61'}}>
+                                Password
+                            </Typography>
+                        </div>
+                        <div style={styles.data}>
+                            <GroupsIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <Typography sx={{color:'#326e61'}}>
+                                Channels
+                            </Typography>
+                        </div>
                     </AccordionDetails>
                 </Accordion>
             </div>
@@ -176,7 +215,7 @@ export default function Settings() {
                 (e) => {
                     e.preventDefault()
                     navigate(`/channels`)
-                  }
+                }
             }>Save</Button>
         </div>
     );
