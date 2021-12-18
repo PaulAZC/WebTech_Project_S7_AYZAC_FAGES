@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const app = require('../lib/app')
 const db = require('../lib/db')
 
-describe('users', () => {
+describe.skip('users', () => {
   
   beforeEach( async () => {
     await db.admin.clear()

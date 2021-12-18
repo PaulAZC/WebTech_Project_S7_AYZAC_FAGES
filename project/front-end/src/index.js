@@ -13,8 +13,20 @@ import {
 } from "react-router-dom";
 
 const theme = createTheme({
-  palette: {
-    mode: 'dark',
+  typography:{
+    fontFamily: "Roboto",
+  },
+  spacing: 5,
+  palette:{
+    primary:{
+      main: "#326e61",
+    },
+    secondary:{
+      main: "#f0f0f0"
+    },
+    error:{
+      main: "#d1a04f"
+    }
   }
 });
 

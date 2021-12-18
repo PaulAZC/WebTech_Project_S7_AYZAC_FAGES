@@ -10,7 +10,7 @@ issuer: http://127.0.0.1:5556/dex
 storage:
   type: sqlite3
   config:
-    file: examples/dex.db
+    file: dex.db
 
 # Configuration for the HTTP endpoints.
 web:
@@ -33,8 +33,8 @@ connectors:
   id: github
   name: GitHub
   config:
-    clientID: xxxx98f1c26493dbxxxx
-    clientSecret: xxxxxxxxx80e139441b637796b128d8xxxxxxxxx
+    clientID: 0e2434c07ae5ee9cb12e
+    clientSecret: 73495583df4d444d7843afae8310f21ba7996a06
     redirectURI: http://127.0.0.1:5556/dex/callback
 
 # Let dex keep a list of passwords which can be used to login to dex.

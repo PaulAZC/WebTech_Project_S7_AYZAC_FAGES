@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', authenticate, async (req, res) => {
-  const channels = await db.channels.list()
+  const channels = await db.channels.list(req.user.email)
   res.json(channels)
 })
 
@@ -41,9 +41,19 @@ app.put('/channels/:id', async (req, res) => {
   res.json(channel)
 })
 
+app.delete('/channels/:id/user/:user', authenticate, async (req, res) => {
+  const channel = await db.channels.deleteUser(req.params.id,req.params.user)
+  res.json(channel)
+})
+
+app.put('/channels/:id/users', authenticate, async(req, res) => {
+  const channel = await db.channels.updateUser(req.params.id,req.body)
+  res.json(channel)
+})//pas marcher
+
 // Messages
 
-app.get('/channels/:id/messages', async (req, res) => {
+app.get('/channels/:id/messages', authenticate, async (req, res) => {
   try{
     const channel = await db.channels.get(req.params.id)
   }catch(err){
@@ -58,11 +68,28 @@ app.post('/channels/:id/messages', async (req, res) => {
   res.status(201).json(message)
 })
 
+app.delete('/channels/:id/message/:creation', authenticate, async (req,res) => {
+  const message = await db.messages.delete(req.params.id, req.params.creation)
+  res.status(200).json(message)
+})
+
+app.put('/channels/:id/message/:creation', authenticate, async (req,res) => {
+  if(Object.keys(req.body).length === 0)
+    return res.status(404).send('No body')
+  const message = await db.messages.put(req.params.id, req.params.creation, req.body)
+  res.status(200).json(message)
+})
+
 // Users
 
-app.get('/users', async (req, res) => {
+app.get('/users', authenticate, async (req, res) => {
   const users = await db.users.list()
   res.json(users)
+})
+
+app.get('/user/:id/channels', authenticate, async (req, res) => {
+  const channels = await db.users.getChannels(req.params.id)
+  res.json(channels)
 })
 
 app.post('/users', async (req, res) => {
@@ -70,8 +97,18 @@ app.post('/users', async (req, res) => {
   res.status(201).json(user)
 })
 
-app.get('/users/:id', async (req, res) => {
-  const user = await db.users.get(req.params.id)
+app.post('/users/channel/:id', async (req, res) => {
+  const user = await db.users.addChannel(req.params.id,req.body)
+  res.status(201).json(user)
+})
+
+app.delete('/user/:user/channel/:id', authenticate, async (req, res) => {
+  const user = await db.users.removeChannel(req.params.user,req.params.id)
+  res.status(200).json(user)
+})
+
+app.get('/user/:email', async (req, res) => {
+  const user = await db.users.get(req.params.email)
   res.json(user)
 })
 

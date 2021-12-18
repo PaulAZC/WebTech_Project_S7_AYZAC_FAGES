@@ -4,7 +4,7 @@ const microtime = require('microtime')
 const app = require('../lib/app')
 const db = require('../lib/db')
 
-describe('messages', () => {
+describe.skip('messages', () => {
   
   beforeEach( async () => {
     await db.admin.clear()
@@ -69,5 +69,83 @@ describe('messages', () => {
     .get(`/channels/1234/messages`)
     .expect(404)
   })
+
+  it('delete one element', async () => {
+    // Create a channel
+    const {body: channel} = await supertest(app)
+    .post('/channels')
+    .send({name: 'channel 1'})
+    // Create a message inside it
+    const {body: message} = await supertest(app)
+    .post(`/channels/${channel.id}/messages`)
+    .send({author: 'whoami', content: 'Hello ECE'})
+    .expect(201)
+
+    const {body: sms} = await supertest(app)
+    .delete(`/channels/${channel.id}/message/${message.creation}`)
+    .expect(200)
+    sms.should.equal(message.creation.toString())
+  })
+
+  it('cannot delete unexisting element', async () => {
+    // Create channel
+    const {body: channel} = await supertest(app)
+    .post('/channels')
+    .send({name: 'channel 1'})
+
+    const {body: sms} = await supertest(app)
+    .delete(`/channels/${channel.id}/message/`)
+    sms.should.be.empty()
+  })
+
+  it('update one element', async () => {
+    // Create a channel
+    const {body: channel} = await supertest(app)
+    .post('/channels')
+    .send({name: 'channel 1'})
+    // Create a message inside it
+    const {body: message} = await supertest(app)
+    .post(`/channels/${channel.id}/messages`)
+    .send({author: 'whoami', content: 'Hello ECE'})
+    .expect(201)
+
+    message.content = 'something else'
+
+    const {body: sms} = await supertest(app)
+    .put(`/channels/${channel.id}/message/${message.creation}`)
+    .send({message})
+    .expect(200)
+    sms.should.match({
+      message:{
+        author: message.author,
+        content: message.content,
+        channelId: channel.id,
+        creation: message.creation
+      },
+      channelId: channel.id,
+      creation: message.creation.toString()
+    })
+  })
+
+  it('cannot update empty element', async () => {
+    // Create channel
+    const {body: channel} = await supertest(app)
+    .post('/channels')
+    .send({name: 'channel 1'})
+    // Create a message inside it
+    const {body: message} = await supertest(app)
+    .post(`/channels/${channel.id}/messages`)
+    .send({author: 'whoami', content: 'Hello ECE'})
+    .expect(201)
+
+    message.content = 'something else'
+
+    const {body: sms} = await supertest(app)
+    .put(`/channels/${channel.id}/message/${message.creation}`)
+    .expect(404)
+    sms.should.be.empty()
+
+  })
+  
   
 })

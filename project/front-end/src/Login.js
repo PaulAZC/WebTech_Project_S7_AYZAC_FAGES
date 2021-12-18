@@ -7,7 +7,7 @@ import qs from 'qs'
 import axios from 'axios'
 // Layout
 import { useTheme } from '@mui/styles';
-import { Link } from '@mui/material';
+import { Link, Button } from '@mui/material';
 // Local
 import Context from './Context'
 import {
@@ -29,11 +29,16 @@ const sha256 = (buffer) => {
 }
 
 const useStyles = (theme) => ({
+  button:{
+    marginBottom: theme.spacing(4)
+  },
   root: {
     flex: '1 1 auto',
-    background: theme.palette.background.default,
     display: 'flex',
+    flexDirection: "column",
     justifyContent: 'center',
+    backgroundColor: "#f0f0f0",
+    paddingBottom: "20px",
     alignItems: 'center',
     '& > div': {
       margin: `${theme.spacing(1)}`,
@@ -55,6 +60,7 @@ const Redirect = ({
   codeVerifier,
 }) => {
   const styles = useStyles(useTheme())
+  const navigate = useNavigate();
   const redirect = (e) => {
     e.stopPropagation()
     const code_challenge = base64URLEncode(sha256(codeVerifier))
@@ -71,7 +77,11 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
+        <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
+        <Button variant="contained" onClick={(e) => {e.preventDefault()
+                  navigate(`/register`)}}>
+            Register a new account
+        </Button>
     </div>
   )
 }
@@ -90,7 +100,7 @@ const Tokens = ({
   }
   return (
     <div css={styles.root}>
-      Welcome {email} <Link onClick={logout} color="secondary">logout</Link>
+      Welcome {email} <Link onClick={logout} >logout</Link>
     </div>
   )
 }
@@ -117,7 +127,32 @@ const LoadToken = ({
           code: `${code}`,
         }))
         removeCookie('code_verifier')
-        setOauth(data)
+        const payload = JSON.parse(
+          Buffer.from(
+            data.id_token.split('.')[1], 'base64'
+          ).toString('utf-8')
+        )
+        await axios.get(`http://localhost:3001/user/${payload.email}`)
+        .then(async res => {
+          if(res.data==="" || res.data == null){
+            await axios.post('http://localhost:3001/users', {
+                email: payload.email,
+                firstName: "default_name",
+                lastName: "default_name",
+                channels: []
+            },{
+                headers: {
+                    'Authorization': `Bearer ${payload.access_token}`
+                }
+            })
+            .then(res2 => {
+              setOauth(data, res2.data.id)
+            })
+          }
+          else{
+            setOauth(data, res.data.id)
+          }
+        })
         navigate('/')
       }catch (err) {
         console.error(err)
@@ -150,7 +185,6 @@ export default function Login({
   if(!code){ // no: we are not being redirected from an oauth server
     if(!oauth){
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
-      console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
@@ -161,7 +195,6 @@ export default function Login({
       )
     }
   }else{ // yes: we are coming from an oauth server
-    console.log('get code_verifier', cookies.code_verifier)
     return (
       <LoadToken
         code={code}

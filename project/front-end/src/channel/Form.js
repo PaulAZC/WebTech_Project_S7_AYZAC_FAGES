@@ -1,11 +1,12 @@
 
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios';
 // Layout
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/styles';
+import Context from '../Context';
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -32,13 +33,18 @@ export default function Form({
   channel,
 }) {
   const [content, setContent] = useState('')
+  const {oauth,} = useContext(Context)
   const styles = useStyles(useTheme())
   const onSubmit = async () => {
     const {data: message} = await axios.post(
       `http://localhost:3001/channels/${channel.id}/messages`
     , {
       content: content,
-      author: 'david',
+      author: oauth.email,
+    },{
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      },
     })
     addMessage(message)
     setContent('')

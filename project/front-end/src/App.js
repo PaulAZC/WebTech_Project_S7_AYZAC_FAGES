@@ -8,6 +8,10 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import Register from './Register'
+import HeaderMenu from './HeaderMenu'
+import Settings from './Settings'
+
 // Rooter
 import {
   Route,
@@ -18,11 +22,12 @@ import {
 
 const styles = {
   root: {
+    width: '100%',
+    heigtht: '100%', 
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#565E71',
-    padding: '50px',
+    backgroundColor: "#f0f0f0",
   },
 }
 
@@ -47,11 +52,15 @@ export default function App() {
   />)
   return (
     <div className="App" css={styles.root}>
-      <Header drawerToggleListener={drawerToggleListener}/>
+      <header>
+        {oauth ? <Header drawerToggleListener={drawerToggleListener}/> : <HeaderMenu/>}   
+      </header>
       <Routes>
         <Route exact path="/" element={oauth ? (gochannels) : (<Login />)}/>
+        <Route path="/register" element={oauth ? (gochannels) : (<Register />)}/>
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>
         <Route path="/Oups" element={<Oups />} />
+        <Route path="/settings" element={oauth ? <Settings /> : (gochannels)}/>
       </Routes>
       <Footer />
     </div>

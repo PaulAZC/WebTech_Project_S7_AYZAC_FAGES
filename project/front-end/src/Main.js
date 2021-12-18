@@ -10,14 +10,17 @@ import Context from './Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
+import NewChannel from './NewChannel'
 import {
   Route,
   Routes,
 } from 'react-router-dom'
+import Settings from './Settings';
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: '#373B44',
+    backgroundColor: '#f0f0f0',
+    color:"#326e61",
     overflow: 'hidden',
     flex: '1 1 auto',
     display: 'flex',
@@ -25,7 +28,7 @@ const useStyles = (theme) => ({
     position: 'relative',
   },
   drawer: {
-    width: '200px',
+    width: '10em',
     display: 'none',
   },
   drawerVisible: {
@@ -38,7 +41,6 @@ export default function Main() {
     // currentChannel, not yet used
     drawerVisible,
   } = useContext(Context)
-  
   const theme = useTheme()
   const styles = useStyles(theme)
   const alwaysOpen = useMediaQuery(theme.breakpoints.up('sm'))
@@ -58,6 +60,7 @@ export default function Main() {
         <Channels />
       </Drawer>
       <Routes>
+        <Route path="/create" element={<NewChannel />}/>
         <Route path=":id" element={<Channel />}/>
         <Route path="*" element={<Welcome />}/>
       </Routes>
