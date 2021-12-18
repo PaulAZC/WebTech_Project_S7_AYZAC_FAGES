@@ -127,7 +127,32 @@ const LoadToken = ({
           code: `${code}`,
         }))
         removeCookie('code_verifier')
-        setOauth(data)
+        const payload = JSON.parse(
+          Buffer.from(
+            data.id_token.split('.')[1], 'base64'
+          ).toString('utf-8')
+        )
+        await axios.get(`http://localhost:3001/user/${payload.email}`)
+        .then(async res => {
+          if(res.data==="" || res.data == null){
+            await axios.post('http://localhost:3001/users', {
+                email: payload.email,
+                firstName: "default_name",
+                lastName: "default_name",
+                channels: []
+            },{
+                headers: {
+                    'Authorization': `Bearer ${payload.access_token}`
+                }
+            })
+            .then(res2 => {
+              setOauth(data, res2.data.id)
+            })
+          }
+          else{
+            setOauth(data, res.data.id)
+          }
+        })
         navigate('/')
       }catch (err) {
         console.error(err)

@@ -1,8 +1,9 @@
 import { Button, Grid, TextField} from '@mui/material';
 import { useTheme } from '@mui/styles';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Context from './Context';
 
 const useStyles = (theme) => ({
     grid: {
@@ -27,13 +28,19 @@ export default function Register(){
     const [email,setEmail] = useState('')
     const [fname,setFirst] = useState('')
     const [lname,setLast] = useState('')
+    const {oauth,} = useContext(Context);
     const register = async (e) =>{
         e.preventDefault()
         //setOauth(email)
         await axios.post('http://localhost:3001/users', {
             email: email,
             firstName: fname,
-            lastName: lname
+            lastName: lname,
+            channels: []
+        },{
+            headers: {
+                'Authorization': `Bearer ${oauth.access_token}`
+            }
         })
         setEmail('')
         setFirst('')

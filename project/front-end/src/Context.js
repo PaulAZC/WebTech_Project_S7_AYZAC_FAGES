@@ -17,7 +17,7 @@ export const Provider = ({
   return (
     <Context.Provider value={{
       oauth: oauth,
-      setOauth: (oauth) => {
+      setOauth: (oauth, id) => {
         if(oauth){
           const payload = JSON.parse(
             Buffer.from(
@@ -25,6 +25,7 @@ export const Provider = ({
             ).toString('utf-8')
           )
           oauth.email = payload.email
+          oauth.id = id
           setCookie('oauth', oauth)
         }else{
           setCurrentChannel(null)
