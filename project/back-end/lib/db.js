@@ -42,10 +42,16 @@ module.exports = {
       if(!original) throw Error('Unregistered channel id')
       store.channels[id] = merge(original, channel)
     },
-    delete: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      delete store.channels[id]
+    delete: async (id) => {
+      if(!id) throw Error('No id')
+      await db.get(`channels:${id}`, async (err,res) => {
+        if(!res)
+          throw Error("Channel doesn't exist")
+        await db.del(`channels:${id}`,(err,res) => {
+          console.log(err,res)
+        })
+      })
+      
     },
     deleteUser: async (id, user) => {
       await db.get(`channels:${id}`,async (err,data)=>{
@@ -136,11 +142,11 @@ module.exports = {
           user.id = key.split(':')[1]
           if(user.email === id){
             users = user;
-            resolve(users)
           }
         }).on( 'error', (err) => {
           reject(err)
         }).on( 'end', () => {
+          console.log(users,"ici")
           resolve(users)
         })
       })

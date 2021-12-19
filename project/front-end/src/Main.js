@@ -1,6 +1,7 @@
 
 /** @jsxImportSource @emotion/react */
-import {useContext} from 'react'
+import {useContext, useEffect} from 'react'
+import axios from 'axios';
 // Layout
 import { useTheme } from '@mui/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -40,11 +41,27 @@ export default function Main() {
   const {
     // currentChannel, not yet used
     drawerVisible,
+    oauth,
+    setOauth
   } = useContext(Context)
   const theme = useTheme()
   const styles = useStyles(theme)
   const alwaysOpen = useMediaQuery(theme.breakpoints.up('sm'))
   const isDrawerVisible = alwaysOpen || drawerVisible
+
+  useEffect(() => {
+    const fetch = async () => {
+      await axios.get(`http://localhost:3001/user/${oauth.email}`)
+      .then(async res => {
+        if(res.data==="" || res.data == null){
+          console.log("on est la")
+          setOauth(null)
+        }
+      })
+    }
+    fetch()
+  },[oauth.email, setOauth])
+  
   return (
     <main css={styles.root}>
       <Drawer
