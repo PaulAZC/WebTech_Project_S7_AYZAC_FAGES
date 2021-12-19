@@ -28,8 +28,9 @@ app.get('/channels', authenticate, async (req, res) => {
 
 app.post('/channels', async (req, res) => {
     const channel = await db.channels.create(req.body)
-    if(!channel)
+    if(!channel){
       res.status(403).json('')
+    }
     else
       res.status(201).json(channel)
 })
@@ -107,7 +108,10 @@ app.get('/users', authenticate, async (req, res) => {
 
 app.get('/user/:id/channels', authenticate, async (req, res) => {
   const channels = await db.users.getChannels(req.params.id)
-  res.json(channels)
+  if(!channels)
+    res.json('')
+  else
+    res.json(channels)
 })
 
 app.post('/users', async (req, res) => {
@@ -129,8 +133,9 @@ app.post('/users/channel/:id', async (req, res) => {
     try{
       const temp = await db.users.get(req.body.user)
       const channels = await db.users.getChannels(temp.id)
-      if(channels.includes(req.params.id))
+      if(channels.includes(req.params.id)){
         throw Error('User already in')
+      }
       const user = await db.users.addChannel(req.params.id,req.body)
       res.status(201).json(user)
     }
@@ -155,8 +160,13 @@ app.delete('/user/:user/channel/:id', authenticate, async (req, res) => {
 })
 
 app.get('/user/:email', async (req, res) => {
-  const user = await db.users.get(req.params.email)
-  res.status(200).json(user)
+  try{
+    const user = await db.users.get(req.params.email)
+    res.status(200).json(user)
+  }
+  catch(err){
+    res.json('')
+  }
 })
 
 app.get('/userId/:id', async (req, res) => {

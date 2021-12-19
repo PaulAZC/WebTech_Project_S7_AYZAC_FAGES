@@ -54,7 +54,6 @@ export default function Main() {
       await axios.get(`http://localhost:3001/user/${oauth.email}`)
       .then(async res => {
         if(res.data==="" || res.data == null){
-          console.log("on est la")
           setOauth(null)
         }
       })

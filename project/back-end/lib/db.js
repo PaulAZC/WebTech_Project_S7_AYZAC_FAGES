@@ -173,7 +173,7 @@ module.exports = {
     get: async (id) => {
       if(!id) throw Error('Invalid email')
       return new Promise( (resolve, reject) => {
-        let users;
+        let users = null;
         db.createReadStream({
           gt: "users:",
           lte: "users" + String.fromCharCode(":".charCodeAt(0) + 1),
@@ -182,11 +182,13 @@ module.exports = {
           user.id = key.split(':')[1]
           if(user.email === id){
             users = user;
+            resolve(users)
           }
         }).on( 'error', (err) => {
           reject(err)
         }).on( 'end', () => {
-          resolve(users)
+          if(users==null)
+            reject(Error('No user like this'))
         })
       })
     },
@@ -197,9 +199,14 @@ module.exports = {
       return merge(user, {id: id})
     },
     getChannels: async (id)=> {
-      const data = await db.get(`users:${id}`)
-      const channels = JSON.parse(data).channels
-      return merge(channels)
+      try{
+        const data = await db.get(`users:${id}`)
+        const channels = JSON.parse(data).channels
+        return merge(channels) 
+      }catch(err){
+        return merge(null)
+      }
+      
     },
     list: async () => {
       return new Promise( (resolve, reject) => {
