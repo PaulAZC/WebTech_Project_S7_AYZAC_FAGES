@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useContext } from 'react';
 import Context from './Context';
 import { useTheme } from '@mui/styles';
+import { useEffect } from 'react';
 import { Avatar, Button, ListItemIcon, ListItemText } from '@mui/material';
 import Gravatar from 'react-gravatar';
 import { Slide } from '@mui/material';
@@ -21,7 +22,8 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import PasswordIcon from '@mui/icons-material/Password';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import GroupsIcon from '@mui/icons-material/Groups';
-
+import axios from 'axios';
+import { Radio } from '@mui/material';
 const useStyles = (theme) => ({
     settings: {
         height: '100%',
@@ -37,9 +39,23 @@ const useStyles = (theme) => ({
     },
     avatarButton: {
         margin: 10,
-    }, 
-    data:{
-        display: 'flex', 
+        width: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    avatarCards: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    avatarCard: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    data: {
+        display: 'flex',
         justifyContent: 'center',
         marginBottom: 10
     }
@@ -61,12 +77,31 @@ export default function Settings() {
     } = useContext(Context)
     const [expanded, setExpanded] = React.useState(false);
 
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const { data: user } = await axios.get('http://localhost:3001/user/${oauth.mail}')
+                    .then(res => {
+                        //ici tu recup le user
+                        console.log(res)
+                    })
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetch()
+    }, [oauth])
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const [selectedValue, setSelectedValue] = React.useState('a');
+
+    const handleChangeRadio = (event) => {
+        setSelectedValue(event.target.value);
+    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -74,6 +109,10 @@ export default function Settings() {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+
+    let avatarUser = avatar1
+    console.log(avatarUser)
+
     return (
         <div style={styles.settings}>
             <div style={styles.container}>
@@ -104,58 +143,83 @@ export default function Settings() {
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Avatar</Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Avatar sx={{ width: 150, height: 150 }}>
-                            <Gravatar
-                                email={oauth.email}
-                                size={150}
-                            />
-                        </Avatar>
                         <div style={styles.avatarButton}>
-                            <Button
-                                variant='contained'
-                                sx={{ margin: 2 }}
-                                size='small'
-                            //redirection on gravatar site
-                            >
-                                Change Gravatar
-                            </Button>
-                            <Button
-                                variant='contained'
-                                sx={{ margin: 2 }}
-                                size='small'
-                                onClick={handleClickOpen}
-                            >
-                                Change with models
-                            </Button>
-                            <Dialog
-                                open={open}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                onClose={handleClose}
-                                aria-describedby="alert-dialog-slide-description"
-                            >
-                                <DialogContent>
-                                    <Button>
-                                        <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />
+                            <div style={styles.avatarCards}>
+                                <div style={styles.avatarCard}>
+                                    <Avatar sx={{ width: 150, height: 150 }} src={avatarUser}>
+                                    </Avatar>
+                                    <Radio
+                                        checked={selectedValue === 'a'}
+                                        onChange={handleChangeRadio}
+                                        value="a"
+                                        name="radio-buttons"
+                                        inputProps={{ 'aria-label': 'A' }}
+                                        //On change, the gratar value become 0 and avatar value become 1
+                                    />
+                                    <Button
+                                        variant='contained'
+                                        sx={{ margin: 2 }}
+                                        size='small'
+                                        onClick={handleClickOpen}
+                                    >
+                                        Change with models
                                     </Button>
-                                    <Button>
-                                        <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />
+                                    <Dialog
+                                        open={open}
+                                        TransitionComponent={Transition}
+                                        keepMounted
+                                        onClose={handleClose}
+                                        aria-describedby="alert-dialog-slide-description"
+                                    >
+                                        <DialogContent>
+                                            <Button>
+                                                {/* Onclick change in the level db the value of the avatarUser */}
+                                                <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />
+                                            </Button>
+                                            <Button>
+                                                <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />
+                                            </Button>
+                                            <Button>
+                                                <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />
+                                            </Button>
+                                            <Button>
+                                                <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />
+                                            </Button>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                                <div style={styles.avatarCard}>
+                                    <Avatar sx={{ width: 150, height: 150 }}>
+                                        <Gravatar
+                                            email={oauth.email}
+                                            size={150}
+                                        />
+                                    </Avatar>
+                                    <Radio
+                                        checked={selectedValue === 'b'}
+                                        onChange={handleChangeRadio}
+                                        value="b"
+                                        name="radio-buttons"
+                                        inputProps={{ 'aria-label': 'B' }}
+                                    />
+                                    <Button
+                                        variant='contained'
+                                        sx={{ margin: 2 }}
+                                        size='small'
+                                    //redirection on gravatar site
+                                    >
+                                        Change Gravatar
                                     </Button>
-                                    <Button>
-                                        <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />
-                                    </Button>
-                                    <Button>
-                                        <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />
-                                    </Button>
-                                </DialogContent>
-                            </Dialog>
+
+                                </div>
+                            </div>
+                            <label htmlFor="contained-button-file">
+                                <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                                <Button variant="contained" component="span" size='small'>
+                                    Upload an avatar
+                                </Button>
+                            </label>
                         </div>
-                        <label htmlFor="contained-button-file">
-                            <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                            <Button variant="contained" component="span" size='small'>
-                                Upload an avatar
-                            </Button>
-                        </label>
                     </AccordionDetails>
                 </Accordion>
                 <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -183,28 +247,28 @@ export default function Settings() {
                     >
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Personal data</Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{display: 'flex', flexDirection:'column', justifyContent:'center', paddingBottom:3}}>
+                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 3 }}>
                         <div style={styles.data}>
-                            <AlternateEmailIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <AlternateEmailIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 {oauth.email}
                             </Typography>
                         </div>
                         <div style={styles.data}>
-                            <AccountCircleIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <AccountCircleIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 Username
                             </Typography>
                         </div>
                         <div style={styles.data}>
-                            <PasswordIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <PasswordIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 Password
                             </Typography>
                         </div>
                         <div style={styles.data}>
-                            <GroupsIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <GroupsIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 Channels
                             </Typography>
                         </div>
