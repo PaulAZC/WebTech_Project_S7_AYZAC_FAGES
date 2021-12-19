@@ -6,16 +6,18 @@ import axios from 'axios';
 import Context from './Context';
 
 const useStyles = (theme) => ({
-    top: {
-        position: 'fixed',
-        top: "15%"
-    },
     grid: {
-        padding: 25,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "100%",
     },
-    root:{
-        width: "50%"
-    },
+    form:{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 })
 
 export default function NewChannel(){

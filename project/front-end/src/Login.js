@@ -10,6 +10,7 @@ import { useTheme } from '@mui/styles';
 import { Link, Button } from '@mui/material';
 // Local
 import Context from './Context'
+import CommentIcon from '@mui/icons-material/Comment';
 import {
   useNavigate
 } from "react-router-dom";
@@ -77,6 +78,7 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
+        <CommentIcon sx={{fontSize: 150, color:"#326e61", padding: 7}}/>
         <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
         <Button variant="contained" onClick={(e) => {e.preventDefault()
                   navigate(`/register`)}}>

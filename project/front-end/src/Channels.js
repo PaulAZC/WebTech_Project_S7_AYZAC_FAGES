@@ -1,34 +1,35 @@
 
 /** @jsxImportSource @emotion/react */
-import {useContext, useEffect} from 'react';
+import { useContext, useEffect } from 'react';
 import axios from 'axios';
 // Layout
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 // Local
 import Context from './Context'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/styles';
 import { Avatar, Badge } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Gravatar from 'react-gravatar';
 
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
-  width: 15,
-  height: 15,
+  width: 10,
+  height: 10,
   border: `1px solid`,
 }));
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor:'#f0f0f0',
+    backgroundColor: '#f0f0f0',
     height: "100%",
     width: "calc(100% - 7px)",
     overflow: 'hidden',
     borderRight: "solid 1px #326e61",
     padding: "3px",
   },
-  channel:{
+  channel: {
     display: "flex",
     flexDirection: "row",
     alignItem: "center",
@@ -36,7 +37,7 @@ const useStyles = (theme) => ({
     paddingBottom: theme.spacing(1),
     paddingTop: theme.spacing(2),
   },
-  listItem:{
+  listItem: {
     backgroundColor: '#326e61',
     color: '#f0f0f0',
     boderRadius: "5px"
@@ -50,10 +51,10 @@ export default function Channels() {
     channels, setChannels
   } = useContext(Context)
   const naviate = useNavigate();
-  useEffect( () => {
+  useEffect(() => {
     const fetch = async () => {
-      try{
-        const {data: channels} = await axios.get('http://localhost:3001/channels', {
+      try {
+        const { data: channels } = await axios.get('http://localhost:3001/channels', {
           headers: {
             'Authorization': `Bearer ${oauth.access_token}`
           },
@@ -62,7 +63,7 @@ export default function Channels() {
           }
         })
         setChannels(channels)
-      }catch(err){
+      } catch (err) {
         console.error(err)
       }
     }
@@ -71,14 +72,11 @@ export default function Channels() {
   const styles = useStyles(useTheme())
   return (
     <ul css={styles.root}>
-      <li css={styles.channel}>
-        <Button to="/channels" variant="contained" color="primary" component={RouterLink}>Welcome</Button>
-      </li>
-      { channels.map( (channel, i) => (
+      {channels.map((channel, i) => (
         <li key={i} css={styles.channel}>
           <Button
             href={`/channels/${channel.id}`}
-            onClick={ (e) => {
+            onClick={(e) => {
               e.preventDefault()
               naviate(`/channels/${channel.id}`)
             }}
@@ -86,16 +84,18 @@ export default function Channels() {
           >
             <Badge
               overlap="circular"
-              style={{marginRight: '7px'}}
+              style={{ marginRight: '7px' }}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               badgeContent={
                 <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
               }
             >
-              <Avatar
-                    alt={`Avatar`}
-                    sx={{width:'30px', height:"30px", margin: '2px'}}
-              />
+              <Avatar sx={{ width: 25, height: 25 }}>
+                <Gravatar
+                  email={oauth.email}
+                  size={25}
+                />
+              </Avatar>
             </Badge>
             {channel.name}
           </Button>

@@ -61,9 +61,10 @@ export default function Welcome() {
           </Button>
         </Grid>
         <Grid item xs>
-          <Button css={styles.card} onClick={(e) => {
-                e.preventDefault()
-              }}>
+        <Button css={styles.card} onClick={(e) => {
+              e.preventDefault()
+              navigate(`/settings`)
+            }}>
             <SettingsIcon css={styles.icon} />
             <Typography color="primary">
               Settings

@@ -16,6 +16,7 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
+import Settings from './Settings';
 
 const useStyles = (theme) => ({
   root: {
