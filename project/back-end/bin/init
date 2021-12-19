@@ -10,6 +10,7 @@ var usr;
 (async function() {
   await db.admin.clear();
   await app.listen(config.port);
+  
   await Promise.all([{
       email: "clement@email.com",
       firstName: "clement",
@@ -37,6 +38,7 @@ var usr;
       channels: user.channels
     })
   }))
+  console.log("ici")
   await Promise.all([{
     name: 'Channel 1',
     users:['ayzacp@gmail.com'],
@@ -154,9 +156,9 @@ var usr;
       users: channel.users
     })
     .then(async res => {
-      if(i%2==0)
+      if(i==0)
         usr = "ayzacp@gmail.com"
-      else
+      else if(i==1)
         usr = "clement.fages@edu.ece.fr"
       await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
           user: usr
