@@ -1,22 +1,26 @@
 
 /** @jsxImportSource @emotion/react */
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 // Layout MUI
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { Avatar, Badge } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-// Local
-import Context from './Context';
-import { useNavigate } from 'react-router-dom';
+// Context
+import Context from '../Contexts/Context';
 
+// Gravatar
 import Gravatar from 'react-gravatar';
-import avatar1 from './static/images/avatar_1.png'
-import avatar2 from './static/images/avatar_2.png'
-import avatar3 from './static/images/avatar_3.png'
-import avatar4 from './static/images/avatar_4.png'
+
+// Local
+import avatar1 from '../static/images/avatar_1.png'
+import avatar2 from '../static/images/avatar_2.png'
+import avatar3 from '../static/images/avatar_3.png'
+import avatar4 from '../static/images/avatar_4.png'
 
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -61,20 +65,20 @@ export default function Channels() {
   useEffect(() => {
 
     if(gravatar===false)
-      setAvatar(<Gravatar email={oauth.email} size={25}/>)
+      setAvatar(<Gravatar email={oauth.email} size={30}/>)
     else{
       switch(gravatar){
         case "1":
-            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 25, height: 25 }}/>)
+            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 30, height: 30 }}/>)
             break;
         case "2":
-            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 25, height: 25 }}/>)
+            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 30, height: 30 }}/>)
             break;
         case "3":
-            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 25, height: 25 }}/>)
+            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 30, height: 30 }}/>)
             break;
         case "4":
-            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 25, height: 25 }}/>)
+            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 30, height: 25 }}/>)
             break;
         default:
             break;
@@ -113,7 +117,7 @@ export default function Channels() {
               style={{ marginRight: '7px' }}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               badgeContent={
-                <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <SmallAvatar alt="Test user" />
               }
             >
               {gravatar ?
@@ -121,7 +125,7 @@ export default function Channels() {
                     {avatar}
                 </div>)
                 :
-                (<Avatar>
+                (<Avatar sx={{ width: 30, height: 30 }}>
                     {avatar}
                 </Avatar>)
               }

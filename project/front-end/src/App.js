@@ -3,14 +3,14 @@
 import { useContext, useState } from 'react'
 
 // Local Components
-import Oups from './Oups'
-import Header from './Header'
-import Main from './Main'
-import Login from './Login'
-import Context from './Context'
-import Register from './Register'
-import HeaderMenu from './HeaderMenu'
-import Settings from './Settings'
+import Oups from './Componants/Oups'
+import Header from './Componants/Header'
+import Main from './Componants/Main'
+import Login from './Componants/Login'
+import Context from './Contexts/Context'
+import Register from './Componants/Register'
+import HeaderMenu from './Componants/HeaderMenu'
+import Settings from './Componants/Settings'
 
 // Rooter
 import {

@@ -15,7 +15,7 @@ import './css/index.css';
 import 'typeface-roboto'
 
 // Context
-import { Provider as ContextProvider } from './Context';
+import { Provider as ContextProvider } from './Contexts/Context';
 
 
 // Layout

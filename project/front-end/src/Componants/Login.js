@@ -15,7 +15,7 @@ import { Link, Button } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 
 // Local contexte
-import Context from './Context'
+import Context from '../Contexts/Context'
 
 
 const base64URLEncode = (str) => {

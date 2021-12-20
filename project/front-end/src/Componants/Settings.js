@@ -5,24 +5,22 @@ import axios from 'axios';
 import { useContext } from 'react';
 
 // Contexte
-import Context from './Context';
+import Context from '../Contexts/Context';
 
 //Gravatar
 import Gravatar from 'react-gravatar';
 
 // Image local
-import avatar1 from './static/images/avatar_1.png'
-import avatar2 from './static/images/avatar_2.png'
-import avatar3 from './static/images/avatar_3.png'
-import avatar4 from './static/images/avatar_4.png'
+import avatar1 from '../static/images/avatar_1.png'
+import avatar2 from '../static/images/avatar_2.png'
+import avatar3 from '../static/images/avatar_3.png'
+import avatar4 from '../static/images/avatar_4.png'
 
 // Layout MUI
 import { styled } from '@mui/material/styles';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import GroupsIcon from '@mui/icons-material/Groups';
-import { Radio } from '@mui/material';
 import { Dialog, DialogContent } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { Avatar, Button, TextField, Slide } from '@mui/material';
@@ -44,7 +42,7 @@ const useStyles = (theme) => ({
     },
     container: {
         width: '50%',
-        margin: '4em'
+        margin: '1em'
     },
     avatarButton: {
         margin: 10,
@@ -79,13 +77,13 @@ const Input = styled('input')({
 });
 
 export default function Settings() {
-    const [name,setName] = useState()
+    const [name, setName] = useState()
     const [gravatar, setGravatar] = useState()
-    const [avatar,setAvatar] = useState()
-    const [first,setFirst] = useState()
-    const [chan,setChanUser] = useState()
-    const [hold,setHold] = useState([])
-    const [edit,setEdit] = useState(true)
+    const [avatar, setAvatar] = useState()
+    const [first, setFirst] = useState()
+    const [chan, setChanUser] = useState()
+    const [hold, setHold] = useState([])
+    const [edit, setEdit] = useState(true)
     const styles = useStyles(useTheme())
     const {
         oauth, setGrav
@@ -97,15 +95,15 @@ export default function Settings() {
     const changeAvatar = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />)
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan,
             gravatar: 1
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
         setGravatar(1)
@@ -116,15 +114,15 @@ export default function Settings() {
     const changeAvatar1 = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />)
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan,
             gravatar: 2
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
         setGravatar(2)
@@ -136,15 +134,15 @@ export default function Settings() {
         setGravatar(3)
         e.preventDefault()
         setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />)
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan,
             gravatar: 3
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
         setGravatar(3)
@@ -155,15 +153,15 @@ export default function Settings() {
     const changeAvatar3 = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />)
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan,
             gravatar: 4
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
         setGravatar(4)
@@ -173,16 +171,16 @@ export default function Settings() {
 
     const changeAvatar4 = async (e) => {
         e.preventDefault()
-        setAvatar(<Gravatar email={oauth.email} size={150}/>)
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+        setAvatar(<Gravatar email={oauth.email} size={150} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan,
             gravatar: false
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
         setGravatar(false)
@@ -190,44 +188,44 @@ export default function Settings() {
         setGrav(false)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetch = async () => {
             await axios.get(`http://localhost:3001/user/${oauth.email}`, {
                 headers: {
                     'Authorization': `Bearer ${oauth.access_token}`
-                  }
-            })
-            .then(res => {
-                setGravatar(res.data.gravatar)
-                setName(res.data.lastName)
-                setFirst(res.data.firstName)
-                setChanUser(res.data.channels)
-                setHold([res.data.firstName,res.data.lastName])
-                
-                if(gravatar===false)
-                    setAvatar(<Gravatar email={oauth.email} size={150}/>)
-                else{
-                    switch(gravatar){
-                        case 1:
-                            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 150, height: 150 }} />)
-                            break;
-                        case 2:
-                            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 150, height: 150 }} />)
-                            break;
-                        case 3:
-                            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 150, height: 150 }} />)
-                            break;
-                        case 4:
-                            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 150, height: 150 }} />)
-                            break;
-                        default:
-                            break;
-                    }
                 }
             })
+                .then(res => {
+                    setGravatar(res.data.gravatar)
+                    setName(res.data.lastName)
+                    setFirst(res.data.firstName)
+                    setChanUser(res.data.channels)
+                    setHold([res.data.firstName, res.data.lastName])
+
+                    if (gravatar === false)
+                        setAvatar(<Gravatar email={oauth.email} size={150} />)
+                    else {
+                        switch (gravatar) {
+                            case 1:
+                                setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 150, height: 150 }} />)
+                                break;
+                            case 2:
+                                setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 150, height: 150 }} />)
+                                break;
+                            case 3:
+                                setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 150, height: 150 }} />)
+                                break;
+                            case 4:
+                                setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 150, height: 150 }} />)
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                })
         }
         fetch()
-    },[gravatar])
+    }, [gravatar])
 
     const editUser = async () => {
         await axios.put(`http://localhost:3001/users/${oauth.id}`, {
@@ -236,7 +234,7 @@ export default function Settings() {
             lastName: name,
             channels: chan,
             gravatar: gravatar
-        },{
+        }, {
             headers: {
                 'Authorization': `Bearer ${oauth.access_token}`
             },
@@ -292,7 +290,7 @@ export default function Settings() {
                                 <Switch
                                     name="Chanhe theme"
                                     color="primary"
-                                    //onChange={toggleTheme}
+                                //onChange={toggleTheme}
                                 />
                             }
                             label="Dark Theme"
@@ -335,33 +333,42 @@ export default function Settings() {
                                         onClose={handleClose}
                                         aria-describedby="alert-dialog-slide-description"
                                     >
-                                        <DialogContent>
-                                            <Button>
-                                                {/* Onclick change in the level db the value of the avatarUser */}
-                                                <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} onClick={changeAvatar} />
-                                            </Button>
-                                            <Button>
-                                                <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} onClick={changeAvatar1}/>
-                                            </Button>
-                                            <Button>
-                                                <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} onClick={changeAvatar2}/>
-                                            </Button>
-                                            <Button>
-                                                <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} onClick={changeAvatar3}/>
-                                            </Button>
-                                            <Button>
-                                            <Avatar sx={{ width: 100, height: 100 }} onClick={changeAvatar4}>
-                                                <Gravatar
-                                                    email={oauth.email}
-                                                    size={150}
-                                                />
-                                            </Avatar>
-                                            </Button>
+                                        <DialogContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Typography color='primary' fontSize={20} sx={{ margin: 2 }}>
+                                                Default avatars
+                                            </Typography>
+                                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottom: 'solid 1px #326e61' }}>
+                                                <Button>
+                                                    <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} onClick={changeAvatar} />
+                                                </Button>
+                                                <Button>
+                                                    <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} onClick={changeAvatar1} />
+                                                </Button>
+                                                <Button>
+                                                    <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} onClick={changeAvatar2} />
+                                                </Button>
+                                                <Button>
+                                                    <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} onClick={changeAvatar3} />
+                                                </Button>
+                                            </div>
+                                            <Typography color='primary' fontSize={20} sx={{ margin: 2 }}>
+                                                Your Gravatar
+                                            </Typography>
+                                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Button>
+                                                    <Avatar sx={{ width: 100, height: 100 }} onClick={changeAvatar4}>
+                                                        <Gravatar
+                                                            email={oauth.email}
+                                                            size={150}
+                                                        />
+                                                    </Avatar>
+                                                </Button>
+                                            </div>
                                         </DialogContent>
                                     </Dialog>
                                 </div>
                                 <div style={styles.avatarCard}>
-                                    
+
 
                                 </div>
                             </div>
@@ -374,23 +381,6 @@ export default function Settings() {
                         </div>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel3bh-content"
-                        id="panel3bh-header"
-                    >
-                        <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>
-                            Advanced settings
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography>
-                            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-                            amet egestas eros, vitae egestas augue. Duis vel est augue.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
                 <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -399,7 +389,7 @@ export default function Settings() {
                     >
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Personal data</Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems:'center', paddingBottom: 3 }}>
+                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <div style={styles.data}>
                             <FingerprintIcon sx={{ marginRight: 3, color: '#326e61' }} />
                             <Typography sx={{ color: '#326e61' }}>
@@ -433,10 +423,10 @@ export default function Settings() {
                                 <TextField sx={{ color: '#326e61' }} value={name} onChange={handleEdit1} />
                             }
                         </div>
-                        <Button variant='contained' sx={{ marginBottom: 3, width: '10%', marginTop: 3 }} onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
                     </AccordionDetails>
                 </Accordion>
             </div>
+            <Button variant='contained' sx={{ marginBottom: 3, marginTop: 3 }} onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
             <Button variant='contained' onClick={editUser}>Save</Button>
         </div>
     );

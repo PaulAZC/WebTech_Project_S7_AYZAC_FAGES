@@ -5,6 +5,7 @@
 - [2. Specifications](#2-specifications-)
 - [3. Project management](#3-project-management-)
 - [4. Application development](#4-application-development-)
+- [5. Bonus](#5-bonus-)
 
 ## 1. Description :
 This project is a chat application based on the work seen in class. The technologies used are ReactJS, NodeJS, expressJS and a LevelDB database
@@ -57,7 +58,8 @@ This project is a chat application based on the work seen in class. The technolo
     * A user can modify a message that he wrote and only his one with the edit button on the right of the button. Each message have his own buttons.
     * A user can delete a message that he wrote and only his one with the edit button on the right of the button next to the edit button, all these functions are shielded.
 * #### 4.7 Account settings 
-    There is an account page accessible when we click on the avatar image on the top right of the app. This page is independent with the channel pages. On this page, the user can access to his personal informations and he can modify them with the `edit` button. He can also change his avatar and choose between gravatar or default avatar model that will change his avatar on all the app.
+    There is an account page accessible when we click on the avatar image on the top right of the app. This page is independent with the channel pages. On this page, the user can access to his personal informations and he can modify them with the `edit` button. He can also change his avatar and choose between gravatar or default avatar model that will change his avatar on all the app. 
+    PS : Dark theme is not working but we created the context to do it
 * #### 4.8 Gravatar integration and avatar selection
     * We implemented the gravatar API using react-gravatar. The user can choose to use it or to use default avatar. If the user has a gravatar account and an image, it will automatically show it using his mail.
     * The user can also choose the default avatars in the settings options. He just have to click on the correspondant button to use it or the gravatar. He can also choose a default image amoung the default images stored in the local app. Once he choose it, this avatar will be display in all the app.

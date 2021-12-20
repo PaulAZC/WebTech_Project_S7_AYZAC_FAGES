@@ -12,18 +12,19 @@ import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+import CottageIcon from '@mui/icons-material/Cottage';
 
 // Local images
-import avatar1 from './static/images/avatar_1.png'
-import avatar2 from './static/images/avatar_2.png'
-import avatar3 from './static/images/avatar_3.png'
-import avatar4 from './static/images/avatar_4.png'
+import avatar1 from '../static/images/avatar_1.png'
+import avatar2 from '../static/images/avatar_2.png'
+import avatar3 from '../static/images/avatar_3.png'
+import avatar4 from '../static/images/avatar_4.png'
 
 // Gravatar
 import Gravatar from 'react-gravatar'
 
 // Context
-import Context from './Context';
+import Context from '../Contexts/Context';
 
 const useStyles = (theme) => ({
   avatar: {
@@ -67,8 +68,7 @@ export default function Header() {
   const [avatar, setAvatar] = useState()
 
   React.useEffect(()=>{
-    console.log("header "+gravatar)
-    if(gravatar==false)
+    if(gravatar===false)
       setAvatar(<Gravatar email={oauth.email} sx={{ width: 30, height: 30 }} onClick={handleClick}/>)
     else{
       switch(gravatar){
@@ -76,7 +76,6 @@ export default function Header() {
             setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
             break;
         case "2":
-          console.log("la")
             setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
             break;
         case "3":
@@ -147,7 +146,7 @@ export default function Header() {
                 {avatar}
             </div>)
             :
-            (<Avatar style={styles.avatar}>
+            (<Avatar style={styles.avatar} onClick={handleClick}>
                 {avatar}
             </Avatar>)
           }

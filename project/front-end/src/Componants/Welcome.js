@@ -18,7 +18,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Avatar } from '@mui/material';
 
 // Context
-import Context from './Context';
+import Context from '../Contexts/Context';
 import { useContext } from 'react';
 
 // Gravatar

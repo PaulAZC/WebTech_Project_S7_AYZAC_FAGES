@@ -14,12 +14,12 @@ import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 // Local
-import Form from './channel/Form'
-import List from './channel/List'
+import Form from '../channel/Form'
+import List from '../channel/List'
 import { useNavigate, useParams } from 'react-router-dom'
 
 // Context
-import Context from './Context'
+import Context from '../Contexts/Context'
 
 const useStyles = (theme) => ({
   root: {

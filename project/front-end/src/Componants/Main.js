@@ -13,7 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Drawer } from '@mui/material';
 
 // Local
-import Context from './Context'
+import Context from '../Contexts/Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
