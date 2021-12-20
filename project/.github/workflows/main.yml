@@ -1,0 +1,43 @@
+name: Project CI/CD
+
+on:
+  push:
+    branches: [ clement, paul ]
+  pull_request:
+    branches: [ master ]
+#Test
+jobs:
+  # CI part
+  test-back:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back-end
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    - run: npm ci
+    - run: npm install mocha
+    - run: npm test
+
+  #CD part
+  deploy:
+    needs: test # Requires CI part to be succesfully completed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Read instructions how to configure this action: https://github.com/marketplace/actions/deploy-to-heroku#getting-started
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: 3328f7a8-af1c-47c7-ad51-ddd53d544a01
+          heroku_app_name: "webtech-project" # Must be unique in Heroku
+          heroku_email: "ayzacp@gmail.com" # Heroku account email
+  
