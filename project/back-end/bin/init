@@ -29,7 +29,15 @@ var usr;
     { email: "antoine@email.com",
       firstName: "antoine",
       lastName: "nette",
-      channels: []}
+      channels: []},
+    { email: "clement.fages@edu.ece.fr",
+      firstName: "Clement",
+      lastName: "Fages",
+      channels: []},
+    { email: "ayzacp@gmail.com",
+      firstName: "Paul",
+      lastName: "Ayzac",
+      channels: []},
   ].map( async (user) => {
     const {data: {id}} = await axios.post(`http://localhost:${config.port}/users`, {
       email: user.email,
@@ -38,7 +46,6 @@ var usr;
       channels: user.channels
     })
   }))
-  console.log("ici")
   await Promise.all([{
     name: 'Channel 1',
     users:['ayzacp@gmail.com'],
@@ -156,13 +163,18 @@ var usr;
       users: channel.users
     })
     .then(async res => {
-      if(i==0)
+      if(i==0){
         usr = "ayzacp@gmail.com"
-      else if(i==1)
-        usr = "clement.fages@edu.ece.fr"
-      await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
+        await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
           user: usr
-      })
+        })
+      }
+      else if(i==1){
+        usr = "clement.fages@edu.ece.fr"
+        await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
+          user: usr
+        })
+      }
       return Promise.all( channel.messages.map( async (message) => {
         await axios.post(`http://localhost:${config.port}/channels/${res.data.id}/messages`, message)
       }))

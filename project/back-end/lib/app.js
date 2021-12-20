@@ -27,23 +27,32 @@ app.get('/channels', authenticate, async (req, res) => {
 })
 
 app.post('/channels', async (req, res) => {
-  const channel = await db.channels.create(req.body)
-  res.status(201).json(channel)
+    const channel = await db.channels.create(req.body)
+    if(!channel){
+      res.status(403).json('')
+    }
+    else
+      res.status(201).json(channel)
 })
 
-app.get('/channels/:id', async (req, res) => {
-  const channel = await db.channels.get(req.params.id)
-  res.json(channel)
+app.get('/channels/:id', async (req, res) => {//peut etre rajouter channel =
+  try{
+    await db.channels.get(req.params.id)
+    res.status(200).json(channel)
+  }
+  catch(err){
+    console.log(err)
+  }
 })
 
 app.delete('/channels/:id', async (req, res) => {
-  const channel = await db.channels.delete(req.params.id)
-  res.json(channel)
+  await db.channels.delete(req.params.id)
+  res.status(200).json(channel)
 })
 
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.body)
-  res.json(channel)
+  const channel = await db.channels.update(req.params.id,req.body)
+  res.status(200).json(channel)
 })
 
 app.delete('/channels/:id/user/:user', authenticate, async (req, res) => {
@@ -52,20 +61,25 @@ app.delete('/channels/:id/user/:user', authenticate, async (req, res) => {
 })
 
 app.put('/channels/:id/users', authenticate, async(req, res) => {
-  const channel = await db.channels.updateUser(req.params.id,req.body)
-  res.json(channel)
-})//pas marcher
+  try{
+    const channel = await db.channels.updateUser(req.params.id,req.body)
+    res.status(200).json(channel)
+  }catch(err){
+    res.status(403).json(err)
+  }
+
+})
 
 // Messages
 
 app.get('/channels/:id/messages', authenticate, async (req, res) => {
   try{
     const channel = await db.channels.get(req.params.id)
+    const messages = await db.messages.list(req.params.id)
+    return res.status(200).json(messages)
   }catch(err){
     return res.status(404).send('Channel does not exist.')
   }
-  const messages = await db.messages.list(req.params.id)
-  res.json(messages)
 })
 
 app.post('/channels/:id/messages', async (req, res) => {
@@ -94,13 +108,15 @@ app.get('/users', authenticate, async (req, res) => {
 
 app.get('/user/:id/channels', authenticate, async (req, res) => {
   const channels = await db.users.getChannels(req.params.id)
-  res.json(channels)
+  if(!channels)
+    res.json('')
+  else
+    res.json(channels)
 })
 
 app.post('/users', async (req, res) => {
   await db.users.list()
   .then(async response => {
-    console.log(response)
     const index = response.findIndex(item => item.email === req.body.email)
     if(index !== -1)
       res.status(409).json('')
@@ -112,23 +128,59 @@ app.post('/users', async (req, res) => {
 })
 
 app.post('/users/channel/:id', async (req, res) => {
-  const user = await db.users.addChannel(req.params.id,req.body)
-  res.status(201).json(user)
+  try{
+    const channel = await db.channels.get(req.params.id)
+    try{
+      const temp = await db.users.get(req.body.user)
+      const channels = await db.users.getChannels(temp.id)
+      if(channels.includes(req.params.id)){
+        throw Error('User already in')
+      }
+      const user = await db.users.addChannel(req.params.id,req.body)
+      res.status(201).json(user)
+    }
+    catch(err){
+      res.status(403).json(err)
+    }
+  }
+  catch(err){
+    res.status(404).json(err)
+  }
+
 })
 
 app.delete('/user/:user/channel/:id', authenticate, async (req, res) => {
-  const user = await db.users.removeChannel(req.params.user,req.params.id)
-  res.status(200).json(user)
+  try{
+    const user = await db.users.removeChannel(req.params.user,req.params.id)
+    res.status(200).json(user)
+  }
+  catch(err){
+    res.status(404).json(err)
+  }
 })
 
 app.get('/user/:email', async (req, res) => {
-  const user = await db.users.get(req.params.email)
-  res.json(user)
+  try{
+    const user = await db.users.get(req.params.email)
+    res.status(200).json(user)
+  }
+  catch(err){
+    res.json('')
+  }
+})
+
+app.get('/userId/:id', async (req, res) => {
+  const user = await db.users.getId(req.params.id)
+  res.status(200).json(user)
 })
 
 app.put('/users/:id', async (req, res) => {
-  const user = await db.users.update(req.body)
-  res.json(user)
+  try{
+    const user = await db.users.update(req.params.id,req.body)
+    res.status(200).json(user)
+  }catch(err){
+    res.status(403).json(err)
+  }
 })
 
 module.exports = app

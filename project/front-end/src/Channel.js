@@ -53,7 +53,7 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const {channels, setChannels, oauth} = useContext(Context)
+  const {channels, setChannels, oauth, setOauth} = useContext(Context)
   const channel = channels.find( channel => channel.id === id)
   const styles = useStyles(useTheme())
   const listRef = useRef()
@@ -246,10 +246,17 @@ export default function Channel() {
         }
       })
       .then(res => {
-        var n = window.location.href.lastIndexOf('/');
-        var str = window.location.href.substring(n+1)
-        if(!res.data.includes(str))
+        console.log('test',res)
+        if(res.data===''){
+          setOauth(null)
           navigate('/oups')
+        }
+        else{
+          var n = window.location.href.lastIndexOf('/');
+          var str = window.location.href.substring(n+1)
+          if(!res.data.includes(str))
+            navigate('/oups')
+        }
       })
     }
     check()

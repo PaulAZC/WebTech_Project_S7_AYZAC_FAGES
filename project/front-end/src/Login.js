@@ -156,6 +156,7 @@ const LoadToken = ({
           }
         })
         navigate('/')
+        
       }catch (err) {
         console.error(err)
       }

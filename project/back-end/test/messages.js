@@ -4,29 +4,30 @@ const microtime = require('microtime')
 const app = require('../lib/app')
 const db = require('../lib/db')
 
-describe.skip('messages', () => {
-  
+describe('messages', () => {
+
   beforeEach( async () => {
     await db.admin.clear()
   })
-  
+
   it('list empty', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
     // Get messages
     const {body: messages} = await supertest(app)
     .get(`/channels/${channel.id}/messages`)
     .expect(200)
+
     messages.should.eql([])
   })
-  
+
   it('list one message', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
     // and a message inside it
     await supertest(app)
     .post(`/channels/${channel.id}/messages`)
@@ -41,17 +42,18 @@ describe.skip('messages', () => {
       content: 'Hello ECE'
     }])
   })
-  
+
   it('add one element', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
     // Create a message inside it
     const {body: message} = await supertest(app)
     .post(`/channels/${channel.id}/messages`)
     .send({author: 'whoami', content: 'Hello ECE'})
     .expect(201)
+
     message.should.match({
       author: 'whoami',
       creation: (it) => it.should.be.approximately(microtime.now(), 1000000),
@@ -62,7 +64,7 @@ describe.skip('messages', () => {
     .get(`/channels/${channel.id}/messages`)
     messages.length.should.eql(1)
   })
-  
+
   it('access invalid channel', async () => {
     // Get messages
     const {body: messages} = await supertest(app)
@@ -74,7 +76,7 @@ describe.skip('messages', () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
     // Create a message inside it
     const {body: message} = await supertest(app)
     .post(`/channels/${channel.id}/messages`)
@@ -91,7 +93,7 @@ describe.skip('messages', () => {
     // Create channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
 
     const {body: sms} = await supertest(app)
     .delete(`/channels/${channel.id}/message/`)
@@ -102,7 +104,7 @@ describe.skip('messages', () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users:[]})
     // Create a message inside it
     const {body: message} = await supertest(app)
     .post(`/channels/${channel.id}/messages`)
@@ -131,7 +133,7 @@ describe.skip('messages', () => {
     // Create channel
     const {body: channel} = await supertest(app)
     .post('/channels')
-    .send({name: 'channel 1'})
+    .send({name: 'channel 1', users: []})
     // Create a message inside it
     const {body: message} = await supertest(app)
     .post(`/channels/${channel.id}/messages`)
@@ -146,6 +148,6 @@ describe.skip('messages', () => {
     sms.should.be.empty()
 
   })
-  
-  
+
+
 })
