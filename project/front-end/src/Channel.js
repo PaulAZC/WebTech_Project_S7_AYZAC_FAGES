@@ -244,24 +244,22 @@ export default function Channel() {
   // On refresh, context.channel is not yet initialized
   if (!channel) {
     const check = async () => {
-      await axios.get(`http://localhost:3001/user/${oauth.id}/channels`, {
+      await axios.get(`http://localhost:3001/user/${oauth.email}/channels`, {
         headers: {
           'Authorization': `Bearer ${oauth.access_token}`
         }
       })
-        .then(res => {
-          console.log('test', res)
-          if (res.data === '') {
-            setOauth(null)
+      .then(res => {
+        if (res.data === '') {
+          setOauth(null)
+        }
+        else {
+          var n = window.location.href.lastIndexOf('/');
+          var str = window.location.href.substring(n + 1)
+          if (!res.data.includes(str))
             navigate('/oups')
-          }
-          else {
-            var n = window.location.href.lastIndexOf('/');
-            var str = window.location.href.substring(n + 1)
-            if (!res.data.includes(str))
-              navigate('/oups')
-          }
-        })
+        }
+      })
     }
     check()
     return (<div>loading</div>)

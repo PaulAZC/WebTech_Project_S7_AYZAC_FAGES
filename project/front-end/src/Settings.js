@@ -21,6 +21,7 @@ import { styled } from '@mui/material/styles';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { Radio } from '@mui/material';
 import { Dialog, DialogContent } from '@mui/material';
 import { useTheme } from '@mui/styles';
@@ -78,45 +79,164 @@ const Input = styled('input')({
 });
 
 export default function Settings() {
-    const [name, setName] = useState()
-    const [first, setFirst] = useState()
-    const [, setChannels] = useState([])
-    const [chan, setChanUser] = useState()
-    const [hold, setHold] = useState([])
-    const [edit, setEdit] = useState(true)
+    const [name,setName] = useState()
+    const [gravatar, setGravatar] = useState()
+    const [avatar,setAvatar] = useState()
+    const [first,setFirst] = useState()
+    const [chan,setChanUser] = useState()
+    const [hold,setHold] = useState([])
+    const [edit,setEdit] = useState(true)
     const styles = useStyles(useTheme())
     const {
-        oauth
+        oauth, setGrav
     } = useContext(Context)
     const [expanded, setExpanded] = useState(false);
 
     const [open, setOpen] = useState(false);
 
-    useEffect(() => {
+    const changeAvatar = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 1
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(1)
+        setOpen(false)
+        setGrav('1')
+    }
+
+    const changeAvatar1 = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 2
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(2)
+        setOpen(false)
+        setGrav('2')
+    }
+
+    const changeAvatar2 = async (e) => {
+        setGravatar(3)
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 3
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(3)
+        setOpen(false)
+        setGrav('3')
+    }
+
+    const changeAvatar3 = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 4
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(4)
+        setOpen(false)
+        setGrav('4')
+    }
+
+    const changeAvatar4 = async (e) => {
+        e.preventDefault()
+        setAvatar(<Gravatar email={oauth.email} size={150}/>)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: false
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(false)
+        setOpen(false)
+        setGrav(false)
+    }
+
+    useEffect(()=>{
         const fetch = async () => {
             await axios.get(`http://localhost:3001/user/${oauth.email}`, {
                 headers: {
                     'Authorization': `Bearer ${oauth.access_token}`
+                  }
+            })
+            .then(res => {
+                setGravatar(res.data.gravatar)
+                setName(res.data.lastName)
+                setFirst(res.data.firstName)
+                setChanUser(res.data.channels)
+                setHold([res.data.firstName,res.data.lastName])
+                
+                if(gravatar===false)
+                    setAvatar(<Gravatar email={oauth.email} size={150}/>)
+                else{
+                    switch(gravatar){
+                        case 1:
+                            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 150, height: 150 }} />)
+                            break;
+                        case 2:
+                            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 150, height: 150 }} />)
+                            break;
+                        case 3:
+                            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 150, height: 150 }} />)
+                            break;
+                        case 4:
+                            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 150, height: 150 }} />)
+                            break;
+                        default:
+                            break;
+                    }
                 }
             })
-                .then(res => {
-                    setChannels([])
-                    setName(res.data.lastName)
-                    setFirst(res.data.firstName)
-                    setChanUser(res.data.channels)
-                    setHold([res.data.firstName, res.data.lastName])
-                })
         }
         fetch()
-    }, [])
+    },[gravatar])
 
     const editUser = async () => {
         await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
-            channels: chan
-        }, {
+            channels: chan,
+            gravatar: gravatar
+        },{
             headers: {
                 'Authorization': `Bearer ${oauth.access_token}`
             },
@@ -140,12 +260,6 @@ export default function Settings() {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
-    const [selectedValue, setSelectedValue] = React.useState('a');
-
-    const handleChangeRadio = (event) => {
-        setSelectedValue(event.target.value);
-    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -153,8 +267,6 @@ export default function Settings() {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
-
-    let avatarUser = avatar1
 
     return (
         <div style={styles.settings}>
@@ -199,16 +311,15 @@ export default function Settings() {
                         <div style={styles.avatarButton}>
                             <div style={styles.avatarCards}>
                                 <div style={styles.avatarCard}>
-                                    <Avatar sx={{ width: 150, height: 150 }} src={avatarUser}>
-                                    </Avatar>
-                                    <Radio
-                                        checked={selectedValue === 'a'}
-                                        onChange={handleChangeRadio}
-                                        value="a"
-                                        name="radio-buttons"
-                                        inputProps={{ 'aria-label': 'A' }}
-                                    //On change, the gratar value become 0 and avatar value become 1
-                                    />
+                                    {gravatar ?
+                                        (<div sx={{ width: 150, height: 150 }}>
+                                            {avatar}
+                                        </div>)
+                                        :
+                                        (<Avatar sx={{ width: 150, height: 150 }}>
+                                            {avatar}
+                                        </Avatar>)
+                                    }
                                     <Button
                                         variant='contained'
                                         sx={{ margin: 2 }}
@@ -227,42 +338,30 @@ export default function Settings() {
                                         <DialogContent>
                                             <Button>
                                                 {/* Onclick change in the level db the value of the avatarUser */}
-                                                <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />
+                                                <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} onClick={changeAvatar} />
                                             </Button>
                                             <Button>
-                                                <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />
+                                                <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} onClick={changeAvatar1}/>
                                             </Button>
                                             <Button>
-                                                <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />
+                                                <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} onClick={changeAvatar2}/>
                                             </Button>
                                             <Button>
-                                                <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />
+                                                <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} onClick={changeAvatar3}/>
+                                            </Button>
+                                            <Button>
+                                            <Avatar sx={{ width: 100, height: 100 }} onClick={changeAvatar4}>
+                                                <Gravatar
+                                                    email={oauth.email}
+                                                    size={150}
+                                                />
+                                            </Avatar>
                                             </Button>
                                         </DialogContent>
                                     </Dialog>
                                 </div>
                                 <div style={styles.avatarCard}>
-                                    <Avatar sx={{ width: 150, height: 150 }}>
-                                        <Gravatar
-                                            email={oauth.email}
-                                            size={150}
-                                        />
-                                    </Avatar>
-                                    <Radio
-                                        checked={selectedValue === 'b'}
-                                        onChange={handleChangeRadio}
-                                        value="b"
-                                        name="radio-buttons"
-                                        inputProps={{ 'aria-label': 'B' }}
-                                    />
-                                    <Button
-                                        variant='contained'
-                                        sx={{ margin: 2 }}
-                                        size='small'
-                                    //redirection on gravatar site
-                                    >
-                                        Change Gravatar
-                                    </Button>
+                                    
 
                                 </div>
                             </div>

@@ -12,47 +12,45 @@ var usr;
   await app.listen(config.port);
 
   await Promise.all([{
-    email: "clement@email.com",
-    firstName: "clement",
-    lastName: "Fages",
-    channels: []
-  },
-  {
-    email: "paul@email.com",
-    firstName: "paul",
-    lastName: "polo",
-    channels: []
-  },
-  {
-    email: "truc@email.com",
-    firstName: "truc",
-    lastName: "muche",
-    channels: []
-  },
-  {
-    email: "antoine@email.com",
-    firstName: "antoine",
-    lastName: "nette",
-    channels: []
-  },
-  {
-    email: "clement.fages@edu.ece.fr",
-    firstName: "Clement",
-    lastName: "Fages",
-    channels: []
-  },
-  {
-    email: "ayzacp@gmail.com",
-    firstName: "Paul",
-    lastName: "Ayzac",
-    channels: []
-  },
-  ].map(async (user) => {
-    const { data: { id } } = await axios.post(`http://localhost:${config.port}/users`, {
+      email: "clement@email.com",
+      firstName: "clement",
+      lastName: "Fages",
+      channels:[],
+      gravatar: false},
+    {
+      email: "paul@email.com",
+      firstName: "paul",
+      lastName: "polo",
+      channels: [],
+      gravatar: false},
+    {
+      email: "truc@email.com",
+      firstName: "truc",
+      lastName: "muche",
+      channels: [],
+      gravatar: false},
+    { email: "antoine@email.com",
+      firstName: "antoine",
+      lastName: "nette",
+      channels: [],
+      gravatar: false},
+    { email: "clement.fages@edu.ece.fr",
+      firstName: "Clement",
+      lastName: "Fages",
+      channels: [],
+      gravatar: false},
+    { email: "ayzacp@gmail.com",
+      firstName: "Paul",
+      lastName: "Ayzac",
+      channels: [],
+      gravatar: false},
+  ].map( async (user) => {
+    const {data: {id}} = await axios.post(`http://localhost:${config.port}/users`, {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      channels: user.channels
+      channels: user.channels,
+      gravatar: user.gravatar
     })
   }))
   await Promise.all([{
@@ -189,5 +187,6 @@ var usr;
         }))
       })
   }))
+  
   process.exit()
 })();

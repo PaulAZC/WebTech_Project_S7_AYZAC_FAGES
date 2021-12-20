@@ -11,12 +11,17 @@ export const Provider = ({
 }) => {
   const [cookies, setCookie, removeCookie] = useCookies([])
   const [oauth, setOauth] = useState(cookies.oauth)
+  const [gravatar, setGravatar] = useState(cookies.gravatar)
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [channels, setChannels] = useState([])
   const [currentChannel, setCurrentChannel] = useState(null)
   return (
     <Context.Provider value={{
       oauth: oauth,
+      setGrav: (grav) => {
+        setGravatar(grav)
+        setCookie('gravatar',grav)
+      },
       setOauth: (oauth, id) => {
         if (oauth) {
           const payload = JSON.parse(
@@ -34,6 +39,7 @@ export const Provider = ({
         }
         setOauth(oauth)
       },
+      gravatar: gravatar,
       channels: channels,
       drawerVisible: drawerVisible,
       setDrawerVisible: setDrawerVisible,

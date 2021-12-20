@@ -66,7 +66,6 @@ const Message = ({ i, message, value, deletable, deleteFct, editFct }) => {
         setEdit(false)
         setValue(temp)
     }
-    console.log("message", message)
     return (
         <li css={styles.message} onMouseEnter={e => setButton(true)} onMouseLeave={e => setButton(false)}>
             <p>

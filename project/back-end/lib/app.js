@@ -38,7 +38,6 @@ app.post('/channels', async (req, res) => {
 app.get('/channels/:id', async (req, res) => {//peut etre rajouter channel =
   try{
     const channel = await db.channels.get(req.params.id)
-    console.log(channel)
     res.status(200).json(channel)
   }
   catch (err) {
@@ -108,8 +107,9 @@ app.get('/users', authenticate, async (req, res) => {
 })
 
 app.get('/user/:id/channels', authenticate, async (req, res) => {
-  const channels = await db.users.getChannels(req.params.id)
-  if (!channels)
+  const temp = await db.users.get(req.user.email)
+  const channels = await db.users.getChannels(temp.id)
+  if(!channels)
     res.json('')
   else
     res.json(channels)
@@ -117,15 +117,16 @@ app.get('/user/:id/channels', authenticate, async (req, res) => {
 
 app.post('/users', async (req, res) => {
   await db.users.list()
-    .then(async response => {
-      const index = response.findIndex(item => item.email === req.body.email)
-      if (index !== -1)
-        res.status(409).json('')
-      else {
-        const user = await db.users.create(req.body)
-        res.status(201).json(user)
-      }
-    })
+  .then(async response => {
+    const index = response.findIndex(item => item.email === req.body.email)
+    if(index !== -1)
+      res.status(409).json('')
+    else{
+      const user = await db.users.create(req.body)
+      res.status(201).json(user)
+    }
+    
+  })
 })
 
 app.post('/users/channel/:id', async (req, res) => {

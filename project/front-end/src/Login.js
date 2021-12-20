@@ -117,7 +117,9 @@ const LoadToken = ({
   codeVerifier,
   config,
   removeCookie,
-  setOauth
+  setOauth,
+  setGravatar,
+  setCookie
 }) => {
   const styles = useStyles(useTheme())
   const navigate = useNavigate();
@@ -146,20 +148,25 @@ const LoadToken = ({
                 email: payload.email,
                 firstName: "default_name",
                 lastName: "default_name",
-                channels: []
-              }, {
+                channels: [],
+                gravatar: false
+            },{
                 headers: {
                   'Authorization': `Bearer ${payload.access_token}`
                 }
-              })
-                .then(res2 => {
-                  setOauth(data, res2.data.id)
-                })
-            }
-            else {
-              setOauth(data, res.data.id)
-            }
-          })
+            })
+            .then(res2 => {
+              setCookie('gravatar',false)
+              setOauth(data, res2.data.id)
+              setGravatar(false)
+            })
+          }
+          else{
+            setCookie('gravatar',res.data.gravatar)
+            setOauth(data, res.data.id)
+            setGravatar(res.data.gravatar)
+          }
+        })
         navigate('/')
 
       } catch (err) {
@@ -179,7 +186,7 @@ export default function Login({
   const styles = useStyles(useTheme());
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
-  const { oauth, setOauth } = useContext(Context)
+  const {oauth, setOauth, setGrav} = useContext(Context)
   const config = {
     authorization_endpoint: 'http://localhost:5556/dex/auth',
     token_endpoint: 'http://localhost:5556/dex/token',
@@ -209,7 +216,9 @@ export default function Login({
         codeVerifier={cookies.code_verifier}
         config={config}
         setOauth={setOauth}
-        removeCookie={removeCookie} />
+        removeCookie={removeCookie}
+        setGravatar={setGrav}
+        setCookie={setCookie} />
     )
   }
 }
