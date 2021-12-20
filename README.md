@@ -122,6 +122,7 @@ This project is a chat application based on the work seen in class. The technolo
 * A user can leave a channel he wants with the menu button on the top right of the corresponding channel. This will open drawer where he can see all the user in the channel and a button `leave` that will delete the correspondant channel in the channel list.
 * If a channel is empty because all the users left it, it will be automatically deleted.
 * We added many tests in the test folder to check if all the request are working and if they are shielded and return correct http responses.
+* We can add users to the application. The functionnality is implemented before the connection with dex. We don't provide password because the OAuth is provided so you can't connect with an address that is not yours. Also we check is the user already exist in the database. If it is the case, an error is returned and the status is diplayed with a snackbar.
 
 
 
