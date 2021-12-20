@@ -28,6 +28,7 @@ jobs:
     - run: npm install mocha
     - run: npm test
 
+
   # CD part
   deploy:
     needs: test
