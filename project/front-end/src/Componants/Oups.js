@@ -1,5 +1,3 @@
-
-/** @jsxImportSource @emotion/react */
 // Layout
 import { useTheme } from '@mui/styles';
 

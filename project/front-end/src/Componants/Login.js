@@ -5,14 +5,18 @@ import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
 import qs from 'qs'
 import axios from 'axios'
-// Layout
-import { useTheme } from '@mui/styles';
-import { Link } from '@mui/material';
-// Local
-import Context from './Context'
 import {
   useNavigate
 } from "react-router-dom";
+
+// Layout
+import { useTheme } from '@mui/styles';
+import { Link, Button } from '@mui/material';
+import CommentIcon from '@mui/icons-material/Comment';
+
+// Local contexte
+import Context from '../Contexts/Context'
+
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -29,11 +33,16 @@ const sha256 = (buffer) => {
 }
 
 const useStyles = (theme) => ({
+  button: {
+    marginBottom: theme.spacing(4)
+  },
   root: {
     flex: '1 1 auto',
-    background: theme.palette.background.default,
     display: 'flex',
+    flexDirection: "column",
     justifyContent: 'center',
+    backgroundColor: "#f0f0f0",
+    paddingBottom: "20px",
     alignItems: 'center',
     '& > div': {
       margin: `${theme.spacing(1)}`,
@@ -55,6 +64,7 @@ const Redirect = ({
   codeVerifier,
 }) => {
   const styles = useStyles(useTheme())
+  const navigate = useNavigate();
   const redirect = (e) => {
     e.stopPropagation()
     const code_challenge = base64URLEncode(sha256(codeVerifier))
@@ -71,7 +81,14 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
+      <CommentIcon sx={{ fontSize: 150, color: "#326e61", padding: 7 }} />
+      <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
+      <Button variant="contained" onClick={(e) => {
+        e.preventDefault()
+        navigate(`/register`)
+      }}>
+        Register a new account
+      </Button>
     </div>
   )
 }
@@ -79,18 +96,18 @@ const Redirect = ({
 const Tokens = ({
   oauth
 }) => {
-  const {setOauth} = useContext(Context)
+  const { setOauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const {id_token} = oauth
+  const { id_token } = oauth
   const id_payload = id_token.split('.')[1]
-  const {email} = JSON.parse(atob(id_payload))
+  const { email } = JSON.parse(atob(id_payload))
   const logout = (e) => {
     e.stopPropagation()
     setOauth(null)
   }
   return (
     <div css={styles.root}>
-      Welcome {email} <Link onClick={logout} color="secondary">logout</Link>
+      Welcome {email} <Link onClick={logout} >logout</Link>
     </div>
   )
 }
@@ -100,26 +117,59 @@ const LoadToken = ({
   codeVerifier,
   config,
   removeCookie,
-  setOauth
+  setOauth,
+  setGravatar,
+  setCookie
 }) => {
   const styles = useStyles(useTheme())
   const navigate = useNavigate();
-  useEffect( () => {
+  useEffect(() => {
     const fetch = async () => {
       try {
-        const {data} = await axios.post(
+        const { data } = await axios.post(
           config.token_endpoint
-        , qs.stringify ({
-          grant_type: 'authorization_code',
-          client_id: `${config.client_id}`,
-          code_verifier: `${codeVerifier}`,
-          redirect_uri: `${config.redirect_uri}`,
-          code: `${code}`,
-        }))
+          , qs.stringify({
+            grant_type: 'authorization_code',
+            client_id: `${config.client_id}`,
+            code_verifier: `${codeVerifier}`,
+            redirect_uri: `${config.redirect_uri}`,
+            code: `${code}`,
+          }))
         removeCookie('code_verifier')
-        setOauth(data)
+        const payload = JSON.parse(
+          Buffer.from(
+            data.id_token.split('.')[1], 'base64'
+          ).toString('utf-8')
+        )
+        await axios.get(`http://localhost:3001/user/${payload.email}`)
+          .then(async res => {
+            if (res.data === "" || res.data == null) {
+              await axios.post('http://localhost:3001/users', {
+                email: payload.email,
+                firstName: "default_name",
+                lastName: "default_name",
+                channels: [],
+                gravatar: false
+            },{
+                headers: {
+                  'Authorization': `Bearer ${payload.access_token}`
+                }
+            })
+            .then(res2 => {
+              setCookie('gravatar',false)
+              setOauth(data, res2.data.id)
+              setGravatar(false)
+            })
+          }
+          else{
+            setCookie('gravatar',res.data.gravatar)
+            setOauth(data, res.data.id)
+            setGravatar(res.data.gravatar)
+          }
+        })
         navigate('/')
-      }catch (err) {
+
+      } catch (err) {
         console.error(err)
       }
     }
@@ -136,7 +186,7 @@ export default function Login({
   const styles = useStyles(useTheme());
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
-  const {oauth, setOauth} = useContext(Context)
+  const {oauth, setOauth, setGrav} = useContext(Context)
   const config = {
     authorization_endpoint: 'http://localhost:5556/dex/auth',
     token_endpoint: 'http://localhost:5556/dex/token',
@@ -147,28 +197,28 @@ export default function Login({
   const params = new URLSearchParams(window.location.search)
   const code = params.get('code')
   // is there a code query parameters in the url 
-  if(!code){ // no: we are not being redirected from an oauth server
-    if(!oauth){
+  if (!code) { // no: we are not being redirected from an oauth server
+    if (!oauth) {
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
-      console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    }else{ // yes: user is already logged in, great, is is working
+    } else { // yes: user is already logged in, great, is is working
       return (
         <Tokens oauth={oauth} css={styles.root} />
       )
     }
-  }else{ // yes: we are coming from an oauth server
-    console.log('get code_verifier', cookies.code_verifier)
+  } else { // yes: we are coming from an oauth server
     return (
       <LoadToken
         code={code}
         codeVerifier={cookies.code_verifier}
         config={config}
         setOauth={setOauth}
-        removeCookie={removeCookie} />
+        removeCookie={removeCookie}
+        setGravatar={setGrav}
+        setCookie={setCookie} />
     )
   }
 }
