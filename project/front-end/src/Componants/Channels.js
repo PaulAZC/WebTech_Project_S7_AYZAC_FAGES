@@ -33,7 +33,7 @@ const useStyles = (theme) => ({
   root: {
     backgroundColor: '#f0f0f0',
     height: "100%",
-    width: "calc(100% - 7px)",
+    width: "100%",
     overflow: 'hidden',
     borderRight: "solid 1px #326e61",
     padding: "3px",

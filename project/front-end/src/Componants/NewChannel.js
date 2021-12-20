@@ -17,7 +17,8 @@ const useStyles = (theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: "100%",
-        padding: 10
+        padding: 10,
+        marginBottom: "15%"
     },
     form: {
         display: 'flex',
@@ -145,7 +146,7 @@ export default function NewChannel() {
             >
                 <form onSubmit={createGroup}>
                     <Grid style={styles.grid}>
-                        <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e) => setName(e.target.value)} error={nameGroup === ""} helperText={nameGroup === "" ? 'Empty field!' : ' '} required />
+                        <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e) => setName(e.target.value)} required />
                     </Grid>
                     <Grid>
                         <Autocomplete
