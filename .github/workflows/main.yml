@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: back-end
+        working-directory: ./project/back-end
     strategy:
       matrix:
         node-version: [16.x]
