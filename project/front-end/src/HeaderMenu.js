@@ -8,16 +8,6 @@ const useStyles = (theme) => ({
   header: {
     height: '3em',
     backgroundColor: '#326e61',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItem: 'center',
-    justifyContent: 'center'
-  },
-  headerLogIn: {
-    backgroundColor: 'red',
-  },
-  headerLogOut: {
-    backgroundColor: 'blue',
   },
   menu: {
     [theme.breakpoints.up('sm')]: {
