@@ -23,11 +23,11 @@ jobs:
     - run: npm install mocha
     - run: npm test
 
-  # # CD part
-  # deploy:
-  #   needs: test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
+  # CD part
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
   
   
