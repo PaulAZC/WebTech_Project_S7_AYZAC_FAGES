@@ -31,6 +31,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { FormControlLabel, Switch } from '@mui/material';
 
 const useStyles = (theme) => ({
     settings: {
@@ -282,10 +283,20 @@ export default function Settings() {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography>
-                            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-                            Aliquam eget maximus est, id dignissim quam.
-                        </Typography>
+                        <FormControlLabel
+                            sx={{
+                                display: 'flex',
+                                color: '#326e61'
+                            }}
+                            control={
+                                <Switch
+                                    name="Chanhe theme"
+                                    color="primary"
+                                    //onChange={toggleTheme}
+                                />
+                            }
+                            label="Dark Theme"
+                        />
                     </AccordionDetails>
                 </Accordion>
                 <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
@@ -388,7 +399,7 @@ export default function Settings() {
                     >
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Personal data</Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 3 }}>
+                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems:'center', paddingBottom: 3 }}>
                         <div style={styles.data}>
                             <FingerprintIcon sx={{ marginRight: 3, color: '#326e61' }} />
                             <Typography sx={{ color: '#326e61' }}>
@@ -422,11 +433,11 @@ export default function Settings() {
                                 <TextField sx={{ color: '#326e61' }} value={name} onChange={handleEdit1} />
                             }
                         </div>
+                        <Button variant='contained' sx={{ marginBottom: 3, width: '10%', marginTop: 3 }} onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
                     </AccordionDetails>
                 </Accordion>
             </div>
             <Button variant='contained' onClick={editUser}>Save</Button>
-            <Button variant='contained' onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
         </div>
     );
 }

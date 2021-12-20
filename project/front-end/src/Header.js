@@ -11,8 +11,9 @@ import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import PanToolIcon from '@mui/icons-material/PanTool';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+
+// Local images
 import avatar1 from './static/images/avatar_1.png'
 import avatar2 from './static/images/avatar_2.png'
 import avatar3 from './static/images/avatar_3.png'
@@ -118,10 +119,10 @@ export default function Header() {
           }}
         >
           <BottomNavigationAction
-            label="Welcome"
-            value="welcomePage"
+            label="Home"
+            value="homePage"
             sx={{ color: "#f0f0f0" }}
-            icon={<PanToolIcon sx={{ color: "#f0f0f0" }} />}
+            icon={<CottageIcon sx={{ color: "#f0f0f0" }} />}
             onClick={(e) => {
               e.preventDefault()
               navigate(`/channels`)
