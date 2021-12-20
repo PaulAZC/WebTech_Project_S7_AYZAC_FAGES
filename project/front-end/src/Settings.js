@@ -1,29 +1,36 @@
-import {useState, useEffect, forwardRef} from 'react';
+/** @jsxImportSource @emotion/react */
+import { useState, useEffect, forwardRef } from 'react';
+import React from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+
+// Contexte
+import Context from './Context';
+
+//Gravatar
+import Gravatar from 'react-gravatar';
+
+// Image local
+import avatar1 from './static/images/avatar_1.png'
+import avatar2 from './static/images/avatar_2.png'
+import avatar3 from './static/images/avatar_3.png'
+import avatar4 from './static/images/avatar_4.png'
+
+// Layout MUI
+import { styled } from '@mui/material/styles';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { Radio } from '@mui/material';
+import { Dialog, DialogContent } from '@mui/material';
+import { useTheme } from '@mui/styles';
+import { Avatar, Button, TextField, Slide } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useContext } from 'react';
-import Context from './Context';
-import { useTheme } from '@mui/styles';
-import { Avatar, Button, TextField, Slide, ListItemIcon, ListItemText } from '@mui/material';
-import Gravatar from 'react-gravatar';
-import { Dialog, DialogContent } from '@mui/material';
-import avatar1 from './static/images/avatar_1.png'
-import avatar2 from './static/images/avatar_2.png'
-import avatar3 from './static/images/avatar_3.png'
-import avatar4 from './static/images/avatar_4.png'
-import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import PasswordIcon from '@mui/icons-material/Password';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import GroupsIcon from '@mui/icons-material/Groups';
-import axios from 'axios';
-import { Radio } from '@mui/material';
+
 const useStyles = (theme) => ({
     settings: {
         height: '100%',
@@ -70,55 +77,55 @@ const Input = styled('input')({
 });
 
 export default function Settings() {
-    const [name,setName] = useState()
-    const [first,setFirst] = useState()
-    const [channels,setChannels] = useState([])
-    const [chan,setChanUser] = useState()
-    const [hold,setHold] = useState([])
-    const [edit,setEdit] = useState(true)
+    const [name, setName] = useState()
+    const [first, setFirst] = useState()
+    const [, setChannels] = useState([])
+    const [chan, setChanUser] = useState()
+    const [hold, setHold] = useState([])
+    const [edit, setEdit] = useState(true)
     const styles = useStyles(useTheme())
     const {
-        oauth, setOauth,
+        oauth
     } = useContext(Context)
     const [expanded, setExpanded] = useState(false);
 
     const [open, setOpen] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetch = async () => {
-            await axios.get(`http://localhost:3001/user/${oauth.email}`,{
+            await axios.get(`http://localhost:3001/user/${oauth.email}`, {
                 headers: {
                     'Authorization': `Bearer ${oauth.access_token}`
-                  }
+                }
             })
-            .then(res => {
-                setChannels([])
-                setName(res.data.lastName)
-                setFirst(res.data.firstName)
-                setChanUser(res.data.channels)
-                setHold([res.data.firstName,res.data.lastName])
-            })
+                .then(res => {
+                    setChannels([])
+                    setName(res.data.lastName)
+                    setFirst(res.data.firstName)
+                    setChanUser(res.data.channels)
+                    setHold([res.data.firstName, res.data.lastName])
+                })
         }
         fetch()
-    },[])
+    })
 
-    const editUser = async () =>{
-        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+    const editUser = async () => {
+        await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
             firstName: first,
             lastName: name,
             channels: chan
-        },{
+        }, {
             headers: {
-              'Authorization': `Bearer ${oauth.access_token}`
+                'Authorization': `Bearer ${oauth.access_token}`
             },
         })
-        .then(res => {
-            if(res){
-                setHold([first,name])
-                setEdit(!edit)
-            }
-        })
+            .then(res => {
+                if (res) {
+                    setHold([first, name])
+                    setEdit(!edit)
+                }
+            })
     }
 
     const handleEdit1 = (e) => {
@@ -190,7 +197,7 @@ export default function Settings() {
                                         value="a"
                                         name="radio-buttons"
                                         inputProps={{ 'aria-label': 'A' }}
-                                        //On change, the gratar value become 0 and avatar value become 1
+                                    //On change, the gratar value become 0 and avatar value become 1
                                     />
                                     <Button
                                         variant='contained'
@@ -285,43 +292,43 @@ export default function Settings() {
                     </AccordionSummary>
                     <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 3 }}>
                         <div style={styles.data}>
-                            <FingerprintIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <FingerprintIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 {oauth.id}
                             </Typography>
                         </div>
                         <div style={styles.data}>
-                            <AlternateEmailIcon sx={{marginRight: 3, color:'#326e61'}}/>
-                            <Typography sx={{color:'#326e61'}}>
+                            <AlternateEmailIcon sx={{ marginRight: 3, color: '#326e61' }} />
+                            <Typography sx={{ color: '#326e61' }}>
                                 {oauth.email}
                             </Typography>
                         </div>
                         <div style={styles.data}>
-                            <AccountCircleIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <AccountCircleIcon sx={{ marginRight: 3, color: '#326e61' }} />
                             {edit ?
-                                <Typography sx={{color:'#326e61'}}>
+                                <Typography sx={{ color: '#326e61' }}>
                                     {first}
                                 </Typography>
                                 :
-                                <TextField sx={{color:'#326e61'}} value={first} onChange={handleEdit2}/>
+                                <TextField sx={{ color: '#326e61' }} value={first} onChange={handleEdit2} />
                             }
-                            
+
                         </div>
                         <div style={styles.data}>
-                            <AccountCircleIcon sx={{marginRight: 3, color:'#326e61'}}/>
+                            <AccountCircleIcon sx={{ marginRight: 3, color: '#326e61' }} />
                             {edit ?
-                                <Typography sx={{color:'#326e61'}}>
+                                <Typography sx={{ color: '#326e61' }}>
                                     {name}
                                 </Typography>
                                 :
-                                <TextField sx={{color:'#326e61'}} value={name} onChange={handleEdit1}/>
+                                <TextField sx={{ color: '#326e61' }} value={name} onChange={handleEdit1} />
                             }
                         </div>
                     </AccordionDetails>
                 </Accordion>
             </div>
             <Button variant='contained' onClick={editUser}>Save</Button>
-            <Button variant='contained' onClick={(e)=>{setEdit(!edit); setFirst(hold[0]); setName(hold[1]);}}>{edit ? "Edit" : "Cancel"}</Button>
+            <Button variant='contained' onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
         </div>
     );
 }

@@ -5,15 +5,18 @@ import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
 import qs from 'qs'
 import axios from 'axios'
-// Layout
-import { useTheme } from '@mui/styles';
-import { Link, Button } from '@mui/material';
-// Local
-import Context from './Context'
-import CommentIcon from '@mui/icons-material/Comment';
 import {
   useNavigate
 } from "react-router-dom";
+
+// Layout
+import { useTheme } from '@mui/styles';
+import { Link, Button } from '@mui/material';
+import CommentIcon from '@mui/icons-material/Comment';
+
+// Local contexte
+import Context from './Context'
+
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -30,7 +33,7 @@ const sha256 = (buffer) => {
 }
 
 const useStyles = (theme) => ({
-  button:{
+  button: {
     marginBottom: theme.spacing(4)
   },
   root: {
@@ -78,12 +81,14 @@ const Redirect = ({
   }
   return (
     <div css={styles.root}>
-        <CommentIcon sx={{fontSize: 150, color:"#326e61", padding: 7}}/>
-        <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
-        <Button variant="contained" onClick={(e) => {e.preventDefault()
-                  navigate(`/register`)}}>
-            Register a new account
-        </Button>
+      <CommentIcon sx={{ fontSize: 150, color: "#326e61", padding: 7 }} />
+      <Button onClick={redirect} style={styles.button} variant="contained" color="primary">Login with OpenID Connect and OAuth2</Button>
+      <Button variant="contained" onClick={(e) => {
+        e.preventDefault()
+        navigate(`/register`)
+      }}>
+        Register a new account
+      </Button>
     </div>
   )
 }
@@ -91,11 +96,11 @@ const Redirect = ({
 const Tokens = ({
   oauth
 }) => {
-  const {setOauth} = useContext(Context)
+  const { setOauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const {id_token} = oauth
+  const { id_token } = oauth
   const id_payload = id_token.split('.')[1]
-  const {email} = JSON.parse(atob(id_payload))
+  const { email } = JSON.parse(atob(id_payload))
   const logout = (e) => {
     e.stopPropagation()
     setOauth(null)
@@ -116,18 +121,18 @@ const LoadToken = ({
 }) => {
   const styles = useStyles(useTheme())
   const navigate = useNavigate();
-  useEffect( () => {
+  useEffect(() => {
     const fetch = async () => {
       try {
-        const {data} = await axios.post(
+        const { data } = await axios.post(
           config.token_endpoint
-        , qs.stringify ({
-          grant_type: 'authorization_code',
-          client_id: `${config.client_id}`,
-          code_verifier: `${codeVerifier}`,
-          redirect_uri: `${config.redirect_uri}`,
-          code: `${code}`,
-        }))
+          , qs.stringify({
+            grant_type: 'authorization_code',
+            client_id: `${config.client_id}`,
+            code_verifier: `${codeVerifier}`,
+            redirect_uri: `${config.redirect_uri}`,
+            code: `${code}`,
+          }))
         removeCookie('code_verifier')
         const payload = JSON.parse(
           Buffer.from(
@@ -135,29 +140,29 @@ const LoadToken = ({
           ).toString('utf-8')
         )
         await axios.get(`http://localhost:3001/user/${payload.email}`)
-        .then(async res => {
-          if(res.data==="" || res.data == null){
-            await axios.post('http://localhost:3001/users', {
+          .then(async res => {
+            if (res.data === "" || res.data == null) {
+              await axios.post('http://localhost:3001/users', {
                 email: payload.email,
                 firstName: "default_name",
                 lastName: "default_name",
                 channels: []
-            },{
+              }, {
                 headers: {
-                    'Authorization': `Bearer ${payload.access_token}`
+                  'Authorization': `Bearer ${payload.access_token}`
                 }
-            })
-            .then(res2 => {
-              setOauth(data, res2.data.id)
-            })
-          }
-          else{
-            setOauth(data, res.data.id)
-          }
-        })
+              })
+                .then(res2 => {
+                  setOauth(data, res2.data.id)
+                })
+            }
+            else {
+              setOauth(data, res.data.id)
+            }
+          })
         navigate('/')
-        
-      }catch (err) {
+
+      } catch (err) {
         console.error(err)
       }
     }
@@ -174,7 +179,7 @@ export default function Login({
   const styles = useStyles(useTheme());
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
-  const {oauth, setOauth} = useContext(Context)
+  const { oauth, setOauth } = useContext(Context)
   const config = {
     authorization_endpoint: 'http://localhost:5556/dex/auth',
     token_endpoint: 'http://localhost:5556/dex/token',
@@ -185,19 +190,19 @@ export default function Login({
   const params = new URLSearchParams(window.location.search)
   const code = params.get('code')
   // is there a code query parameters in the url 
-  if(!code){ // no: we are not being redirected from an oauth server
-    if(!oauth){
+  if (!code) { // no: we are not being redirected from an oauth server
+    if (!oauth) {
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    }else{ // yes: user is already logged in, great, is is working
+    } else { // yes: user is already logged in, great, is is working
       return (
         <Tokens oauth={oauth} css={styles.root} />
       )
     }
-  }else{ // yes: we are coming from an oauth server
+  } else { // yes: we are coming from an oauth server
     return (
       <LoadToken
         code={code}
