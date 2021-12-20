@@ -2,7 +2,7 @@ name: Project CI/CD
 
 on:
   push:
-    branches: [ paul, clement ]
+    branches: [ paul, clement, master ]
   pull_request:
     branches: [ master ]
 
