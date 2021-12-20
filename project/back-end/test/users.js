@@ -88,7 +88,7 @@ describe('users', () => {
     // Create a user
     const { body: user1 } = await supertest(app)
       .post('/users')
-      .send({ email: 'user_1', lastName: 'fages', firstName: 'clement', channels: [] })
+      .send({ email: 'admin@example.com', lastName: 'fages', firstName: 'clement', channels: [] })
     // Get its channels
     const { body: channels } = await supertest(app)
       .get(`/user/${user1.id}/channels`)
@@ -100,7 +100,7 @@ describe('users', () => {
     // Create a user
     const { body: user1 } = await supertest(app)
       .post('/users')
-      .send({ email: 'user_1', lastName: 'fages', firstName: 'clement', channels: [] })
+      .send({ email: 'admin@example.com', lastName: 'fages', firstName: 'clement', channels: [] })
     // Update firstName and lastName
     user1.lastName = 'nouveaux'
     user1.firstName = 'prenom'
