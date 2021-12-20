@@ -68,7 +68,7 @@ This project is a chat application based on the work seen in class. The technolo
 | Naming convention                                               |  +2   | :white_check_mark: |
 | Project structure                                               |  +4   | :white_check_mark: |
 | Code quality                                                    |  +3   | :white_check_mark: |
-| Git & DevOps                                                    |  +4   | :white_check_mark: |
+| Git & DevOps                                                    |  +3   | :white_check_mark: |
 | Design, UX                                                      |  +3   | :white_check_mark: |
 | Welcome screen                                                  |  +3   | :white_check_mark: |
 | New channel creation                                            |  +6   | :white_check_mark: |
@@ -83,7 +83,7 @@ This project is a chat application based on the work seen in class. The technolo
 | Personal customer avatar                                        |  +6   |         :x:        |
 | Bonus : Leave a channel                                         |  +2   | :white_check_mark: |
 | Bonus : Display the members of a channel                        |  +2   | :white_check_mark: |
-| Total                                                           |  54   |
+| Total                                                           |  53   |
 
 ## 3. Project management :
 * #### 3.1 Naming convention
@@ -123,6 +123,7 @@ This project is a chat application based on the work seen in class. The technolo
 * If a channel is empty because all the users left it, it will be automatically deleted.
 * We added many tests in the test folder to check if all the request are working and if they are shielded and return correct http responses.
 * We can add users to the application. The functionnality is implemented before the connection with dex. We don't provide password because the OAuth is provided so you can't connect with an address that is not yours. Also we check is the user already exist in the database. If it is the case, an error is returned and the status is diplayed with a snackbar.
+* We implemented the modify a property channel in the back but not in the front
 
 
 

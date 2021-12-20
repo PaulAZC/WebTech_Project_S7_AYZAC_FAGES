@@ -118,7 +118,11 @@ export default function Channel() {
           }
         })
         if (channel.users.length <= 0) {
-          await axios.delete(`http://localhost:3001/channels/${channel.id}`)
+          await axios.delete(`http://localhost:3001/channels/${channel.id}`, {
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            }
+          })
         }
       });
     navigate('/channels')

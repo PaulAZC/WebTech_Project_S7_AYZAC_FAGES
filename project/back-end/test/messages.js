@@ -3,9 +3,9 @@ const supertest = require('supertest')
 const microtime = require('microtime')
 const app = require('../lib/app')
 const db = require('../lib/db')
-
+//messages tests
 describe('messages', () => {
-
+//before each test flush db
   beforeEach(async () => {
     await db.admin.clear()
   })
@@ -53,7 +53,7 @@ describe('messages', () => {
       .post(`/channels/${channel.id}/messages`)
       .send({ author: 'whoami', content: 'Hello ECE' })
       .expect(201)
-
+    //check insertion
     message.should.match({
       author: 'whoami',
       creation: (it) => it.should.be.approximately(microtime.now(), 1000000),
@@ -82,7 +82,7 @@ describe('messages', () => {
       .post(`/channels/${channel.id}/messages`)
       .send({ author: 'whoami', content: 'Hello ECE' })
       .expect(201)
-
+    //delete the message
     const { body: sms } = await supertest(app)
       .delete(`/channels/${channel.id}/message/${message.creation}`)
       .expect(200)
@@ -94,7 +94,7 @@ describe('messages', () => {
     const { body: channel } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: [] })
-
+    //try delete channel
     const { body: sms } = await supertest(app)
       .delete(`/channels/${channel.id}/message/`)
     sms.should.be.empty()
@@ -110,9 +110,9 @@ describe('messages', () => {
       .post(`/channels/${channel.id}/messages`)
       .send({ author: 'whoami', content: 'Hello ECE' })
       .expect(201)
-
+    //change value of content
     message.content = 'something else'
-
+    //edit the message
     const { body: sms } = await supertest(app)
       .put(`/channels/${channel.id}/message/${message.creation}`)
       .send({ message })
@@ -139,9 +139,9 @@ describe('messages', () => {
       .post(`/channels/${channel.id}/messages`)
       .send({ author: 'whoami', content: 'Hello ECE' })
       .expect(201)
-
+    //change
     message.content = 'something else'
-
+    //try to update emtpy
     const { body: sms } = await supertest(app)
       .put(`/channels/${channel.id}/message/${message.creation}`)
       .expect(404)
