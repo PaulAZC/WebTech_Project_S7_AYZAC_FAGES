@@ -64,7 +64,7 @@ export default function Header() {
 
   React.useEffect(()=>{
     console.log("header "+gravatar)
-    if(gravatar===false)
+    if(gravatar==false)
       setAvatar(<Gravatar email={oauth.email} sx={{ width: 30, height: 30 }} onClick={handleClick}/>)
     else{
       switch(gravatar){
