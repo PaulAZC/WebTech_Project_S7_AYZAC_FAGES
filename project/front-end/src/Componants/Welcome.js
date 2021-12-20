@@ -1,4 +1,4 @@
-
+/* Welcome Screen when the user enter the application*/
 /** @jsxImportSource @emotion/react */
 // Layout MUI
 import { useTheme } from '@mui/styles';
@@ -24,7 +24,7 @@ import { useContext } from 'react';
 // Gravatar
 import Gravatar from 'react-gravatar';
 
-
+//set styles
 const useStyles = (theme) => ({
   root: {
     width: '100%',
@@ -92,10 +92,12 @@ const useStyles = (theme) => ({
 })
 
 export default function Welcome() {
+  //get variables
   const styles = useStyles(useTheme())
   const {
     oauth
   } = useContext(Context)
+  //return layout using mui
   return (
     <div css={styles.root}>
       <div style={styles.top}>

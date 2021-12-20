@@ -3,7 +3,7 @@
 import { useTheme } from '@mui/styles';
 
 
-
+//set style
 const useStyles = (theme) => ({
   header: {
     height: '3em',
@@ -15,7 +15,7 @@ const useStyles = (theme) => ({
     },
   }
 })
-
+//header menu style
 export default function HeaderMenu() {
   const styles = useStyles(useTheme())
   return (

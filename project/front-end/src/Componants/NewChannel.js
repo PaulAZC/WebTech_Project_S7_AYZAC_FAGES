@@ -1,3 +1,4 @@
+/* Create a new channel */
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +18,8 @@ const useStyles = (theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: "100%",
-        padding: 10
+        padding: 15,
+        marginBottom: 20
     },
     form: {
         display: 'flex',
@@ -48,22 +50,23 @@ export default function NewChannel() {
     });
 
     const { vertical, horizontal, open } = state;
-
+    //function to open snackbar
     const handleClick = (newState) => {
         setState({ open: true, ...newState });
     };
-
+    //function to close/remove snackbar
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setState({ ...state, open: false });
     };
-
+    //function that created a new group
     const createGroup = (e) => {
         e.preventDefault()
         var regExp = /\(([^)]+)\)/;
         try {
+            //get user according to the email
             for (let i = 0; i < chooseUser.length; i++) {
                 try {
                     chooseUser[i] = users.find(e => e.email === regExp.exec(chooseUser[i])[1])
@@ -78,8 +81,9 @@ export default function NewChannel() {
         catch (err) {
             console.error(err)
         }
-
+        //if enough user -> create e group
         if (chooseUser.length > 1) {
+            //Create channel
             axios.post('http://localhost:3001/channels', {
                 name: nameGroup,
                 users: chooseUser,
@@ -88,23 +92,25 @@ export default function NewChannel() {
                     'Authorization': `Bearer ${oauth.access_token}`
                 },
             })
-                .then(async res => {
-                    setChannels([...channels, res.data])
-                    navigate(`/channels/${res.data.id}`)
-                    chooseUser.map(async (user) => {
-                        await axios.post(`http://localhost:3001/users/channel/${res.data.id}`, {
-                            user: user
-                        }, {
-                            headers: {
-                                'Authorization': `Bearer ${oauth.access_token}`
-                            }
-                        })
+            .then(async res => {
+                setChannels([...channels, res.data])
+                //navigate to the channel
+                navigate(`/channels/${res.data.id}`)
+                //add channel id to users
+                chooseUser.map(async (user) => {
+                    await axios.post(`http://localhost:3001/users/channel/${res.data.id}`, {
+                        user: user
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${oauth.access_token}`
+                        }
                     })
-
                 })
+
+            })
             setName('')
             setChooseUser([])
-        }
+        }//else if error
         else {
             if (ncKey)
                 setKey(false)
@@ -114,7 +120,7 @@ export default function NewChannel() {
             setChooseUser([])
         }
     }
-
+    //get users when loading page
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -134,7 +140,7 @@ export default function NewChannel() {
         }
         fetch()
     }, [oauth])
-
+    //return layout
     return (
         <div style={styles.container}>
             <Grid
@@ -145,7 +151,7 @@ export default function NewChannel() {
             >
                 <form onSubmit={createGroup}>
                     <Grid style={styles.grid}>
-                        <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e) => setName(e.target.value)} error={nameGroup === ""} helperText={nameGroup === "" ? 'Empty field!' : ' '} required />
+                        <TextField id="standard-basic" label="Name of channel" variant="standard" size="medium" value={nameGroup} onChange={(e) => setName(e.target.value)} required />
                     </Grid>
                     <Grid>
                         <Autocomplete

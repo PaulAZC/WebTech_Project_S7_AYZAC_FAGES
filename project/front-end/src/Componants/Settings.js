@@ -31,6 +31,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormControlLabel, Switch } from '@mui/material';
 
+// CSS configuration
 const useStyles = (theme) => ({
     settings: {
         height: '100%',
@@ -68,15 +69,18 @@ const useStyles = (theme) => ({
     }
 })
 
+// Transition for the Dialog component when it is oopen
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// Ignore the input component for the download button
 const Input = styled('input')({
     display: 'none',
 });
 
 export default function Settings() {
+    // All states for gravatar and for oauth values
     const [name, setName] = useState()
     const [gravatar, setGravatar] = useState()
     const [avatar, setAvatar] = useState()
@@ -92,6 +96,7 @@ export default function Settings() {
 
     const [open, setOpen] = useState(false);
 
+    // Put the DB values to change the avatar with axios
     const changeAvatar = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />)
@@ -111,6 +116,7 @@ export default function Settings() {
         setGrav('1')
     }
 
+    // Same for the avatar 1
     const changeAvatar1 = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />)
@@ -130,6 +136,7 @@ export default function Settings() {
         setGrav('2')
     }
 
+    // Same for the avatar 2
     const changeAvatar2 = async (e) => {
         setGravatar(3)
         e.preventDefault()
@@ -150,6 +157,7 @@ export default function Settings() {
         setGrav('3')
     }
 
+    // Same for the avatar 3
     const changeAvatar3 = async (e) => {
         e.preventDefault()
         setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />)
@@ -169,6 +177,7 @@ export default function Settings() {
         setGrav('4')
     }
 
+    // Same for the avatar 4
     const changeAvatar4 = async (e) => {
         e.preventDefault()
         setAvatar(<Gravatar email={oauth.email} size={150} />)
@@ -188,6 +197,7 @@ export default function Settings() {
         setGrav(false)
     }
 
+    // UseEffect to get the avatar value with axios
     useEffect(() => {
         const fetch = async () => {
             await axios.get(`http://localhost:3001/user/${oauth.email}`, {
@@ -227,6 +237,7 @@ export default function Settings() {
         fetch()
     }, [gravatar])
 
+    // Edit the user with axios 
     const editUser = async () => {
         await axios.put(`http://localhost:3001/users/${oauth.id}`, {
             email: oauth.email,
@@ -247,25 +258,32 @@ export default function Settings() {
             })
     }
 
+    // Function to edit the FirstName
     const handleEdit1 = (e) => {
         setName(e.target.value)
     }
 
+    // Function to edit the Lastname
     const handleEdit2 = (e) => {
         setFirst(e.target.value)
     }
 
+    // Open if we click on this component
     const handleClickOpen = () => {
         setOpen(true);
     };
+
+    // Close it if we click on it
     const handleClose = () => {
         setOpen(false);
     };
 
+    // If value change, expande it or not
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    // Return the 
     return (
         <div style={styles.settings}>
             <div style={styles.container}>
@@ -282,6 +300,7 @@ export default function Settings() {
                     </AccordionSummary>
                     <AccordionDetails>
                         <FormControlLabel
+                            // Dark mode but not working here
                             sx={{
                                 display: 'flex',
                                 color: '#326e61'
@@ -309,7 +328,9 @@ export default function Settings() {
                         <div style={styles.avatarButton}>
                             <div style={styles.avatarCards}>
                                 <div style={styles.avatarCard}>
+
                                     {gravatar ?
+                                        // Set avatar choosen  
                                         (<div sx={{ width: 150, height: 150 }}>
                                             {avatar}
                                         </div>)
@@ -327,6 +348,7 @@ export default function Settings() {
                                         Change with models
                                     </Button>
                                     <Dialog
+                                        // Choose the avatar with this Dialog component
                                         open={open}
                                         TransitionComponent={Transition}
                                         keepMounted
@@ -358,6 +380,7 @@ export default function Settings() {
                                                 <Button>
                                                     <Avatar sx={{ width: 100, height: 100 }} onClick={changeAvatar4}>
                                                         <Gravatar
+                                                            // Choose the gravatar value
                                                             email={oauth.email}
                                                             size={150}
                                                         />
@@ -389,7 +412,14 @@ export default function Settings() {
                     >
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Personal data</Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                    <AccordionDetails
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column', justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    // Modify and disply the bdd values using oauth
+                    >
                         <div style={styles.data}>
                             <FingerprintIcon sx={{ marginRight: 3, color: '#326e61' }} />
                             <Typography sx={{ color: '#326e61' }}>
@@ -426,8 +456,21 @@ export default function Settings() {
                     </AccordionDetails>
                 </Accordion>
             </div>
-            <Button variant='contained' sx={{ marginBottom: 3, marginTop: 3 }} onClick={(e) => { setEdit(!edit); setFirst(hold[0]); setName(hold[1]); }}>{edit ? "Edit" : "Cancel"}</Button>
-            <Button variant='contained' onClick={editUser}>Save</Button>
+            <div style={{ display: 'flex' }}>
+                <Button
+                    // Edit and save button (save redirect to the channel page)
+                    variant='contained'
+                    sx={{
+                        marginRight: 3, marginTop: 3
+                    }}
+                    onClick={(e) => {
+                        setEdit(!edit); setFirst(hold[0]);
+                        setName(hold[1]);
+                    }}>
+                    {edit ? "Edit" : "Cancel"}
+                </Button>
+                <Button variant='contained' sx={{ marginTop: 3 }} onClick={editUser}>Save</Button>
+            </div>
         </div>
     );
 }

@@ -6,7 +6,9 @@ const level = require('level')
 const db = level(__dirname + '/../db')
 
 module.exports = {
+  //channel api
   channels: {
+    //create a channel
     create: async (channel) => {
       try {
         if (!channel.name || !channel.users) throw Error('Invalid channel')
@@ -18,6 +20,7 @@ module.exports = {
       }
 
     },
+    //get a channel
     get: async (id) => {
       let channel;
       if(!id) throw Error('Invalid id')
@@ -35,6 +38,7 @@ module.exports = {
         })
       })
     },
+    //get all channels
     list: async (id) => {
       return new Promise((resolve, reject) => {
         const channels = []
@@ -53,6 +57,7 @@ module.exports = {
         })
       })
     },
+    //update a channel
     update: async (id, channel) => {
       if (!id) throw Error('Unregistered channel id')
       await new Promise(async (resolve, reject) => {
@@ -69,6 +74,7 @@ module.exports = {
       })
       return merge(channel, { id: id })
     },
+    //delete a channel
     delete: async (id) => {
       if (!id) throw Error('No id')
       await db.get(`channels:${id}`, async (err, res) => {
@@ -79,6 +85,7 @@ module.exports = {
         })
       })
     },
+    //delete a user from a channel
     deleteUser: async (id, user) => {
       await new Promise(async (resolve, reject) => {
         await db.get(`channels:${id}`, async (err, data) => {
@@ -92,6 +99,7 @@ module.exports = {
         })
       })
     },
+    //add user to channel
     updateUser: async (id, users) => {
       await new Promise(async (resolve, reject) => {
         await db.get(`channels:${id}`, async (err, res) => {
@@ -116,7 +124,9 @@ module.exports = {
       return merge(users, { id: id })
     },
   },
+  //message api
   messages: {
+    //create a message
     create: async (channelId, message) => {
       if (!channelId) throw Error('Invalid channel')
       if (!message.author) throw Error('Invalid message')
@@ -128,6 +138,7 @@ module.exports = {
       }))
       return merge(message, { channelId: channelId, creation: creation })
     },
+    //get all messages
     list: async (channelId) => {
       return new Promise((resolve, reject) => {
         const messages = []
@@ -147,6 +158,7 @@ module.exports = {
         })
       })
     },
+    //delete a message
     delete: async (channelId, creation) => {
       if (!creation) throw Error('Invalid message id')
       await db.del(`messages:${channelId}:${creation}`, (err) => {
@@ -155,6 +167,7 @@ module.exports = {
       })
       return merge(channelId, creation);
     },
+    //edit a message
     put: async (channelId, creation, message) => {
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.message.author,
@@ -163,13 +176,16 @@ module.exports = {
       return merge(message, { channelId: channelId, creation: creation })
     },
   },
+  //user api
   users: {
+    //create a user
     create: async (user) => {
       if (!user.email) throw Error('Invalid user')
       const id = uuid()
       await db.put(`users:${id}`, JSON.stringify(user))
       return merge(user, { id: id })
     },
+    //get a user
     get: async (id) => {
       if (!id) throw Error('Invalid email')
       return new Promise((resolve, reject) => {
@@ -192,12 +208,14 @@ module.exports = {
         })
       })
     },
+    //get a user by id
     getId: async (id) => {
       if (!id) throw Error('Invalid id')
       const data = await db.get(`users:${id}`)
       const user = JSON.parse(data)
       return merge(user, { id: id })
     },
+    //get channels of a user
     getChannels: async (id) => {
       try {
         const data = await db.get(`users:${id}`)
@@ -208,6 +226,7 @@ module.exports = {
       }
 
     },
+    //get all users
     list: async () => {
       return new Promise((resolve, reject) => {
         const users = []
@@ -225,6 +244,7 @@ module.exports = {
         })
       })
     },
+    //update a user
     update: async (id, user) => {
       if (!id) throw Error('Unregistered user id')
       await new Promise(async (resolve, reject) => {
@@ -246,11 +266,7 @@ module.exports = {
       })
       return merge(user, { id: id })
     },
-    delete: (id, user) => {
-      const original = store.users[id]
-      if (!original) throw Error('Unregistered user id')
-      delete store.users[id]
-    },
+    //add a channel to a user
     addChannel: async (idChannel, usemail) => {
       return new Promise((resolve, reject) => {
         const users = []
@@ -278,6 +294,7 @@ module.exports = {
         })
       })
     },
+    //remove a channel from user's list
     removeChannel: async (user, id) => {
       await new Promise(async (resolve, reject) => {
         await db.get(`users:${user}`, async (err, res) => {
@@ -304,6 +321,7 @@ module.exports = {
     }
   },
   admin: {
+    //clear db
     clear: async () => {
       await db.clear()
     }

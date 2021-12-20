@@ -1,0 +1,33 @@
+name: Project CI/CD
+
+on:
+  push:
+    branches: [ paul, clement ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # CI part
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./project/back-end
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+    - run: npm install mocha
+    - run: npm test
+
+  # CD part
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+  
+  

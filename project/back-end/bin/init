@@ -7,6 +7,7 @@ const config = {
   port: 3001
 };
 var usr;
+//post some users
 (async function () {
   await db.admin.clear();
   await app.listen(config.port);
@@ -53,6 +54,7 @@ var usr;
       gravatar: user.gravatar
     })
   }))
+  //post some messages, and channels
   await Promise.all([{
     name: 'Channel 1',
     users: ['ayzacp@gmail.com'],
@@ -187,6 +189,6 @@ var usr;
         }))
       })
   }))
-  
+  //exit process
   process.exit()
 })();

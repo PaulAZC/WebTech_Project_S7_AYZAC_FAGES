@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+/* Create a new user */
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // Layout MUI
 import { Button, Grid, TextField, Snackbar, Alert } from '@mui/material';
 import { useTheme } from '@mui/styles';
-
+//create style
 const useStyles = (theme) => ({
     grid: {
         paddingBottom: 20,
@@ -38,22 +39,23 @@ export default function Register() {
     });
 
     const { vertical, horizontal, open } = state;
-
+    //state for snackbars
     const handleClick = (newState) => {
         setState({ open: true, ...newState });
     };
-
+    //close snackbar
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setState({ ...state, open: false });
     };
-
+    //function to create a new user
     const register = async (e) => {
         e.preventDefault()
         //setOauth(email)
         try {
+            //try axios method
             await axios.post('http://localhost:3001/users', {
                 email: email,
                 firstName: fname,
@@ -66,6 +68,7 @@ export default function Register() {
         catch (err) {
             setSever({ severity: 'error', message: 'Error on creation !' })
         }
+        //set textfield empty
         setEmail('')
         setFirst('')
         setLast('')

@@ -1,0 +1,31 @@
+version: '3'
+services:
+  back:
+    image: redseahorse/back_web
+    ports:
+      - "3001:3001"
+    volumes:
+      - myvolume:/data
+    depends_on:
+      - dex
+    healthcheck:
+      test: ["CMD", "curl", "localhost:3001"]
+      interval: 5s
+      timeout: 20s
+      retries: 5
+  front:
+    image: redseahorse/front_web
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    depends_on:
+      back: 
+        condition: service_healthy
+    links:
+      - back
+  dex:
+    image: redseahorse/dex_projet
+    ports:
+      - "5556:5556"
+volumes:
+  myvolume:

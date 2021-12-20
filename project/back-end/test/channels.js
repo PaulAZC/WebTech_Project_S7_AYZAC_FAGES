@@ -2,13 +2,13 @@
 const supertest = require('supertest')
 const app = require('../lib/app')
 const db = require('../lib/db')
-
+//channels test
 describe('channels', () => {
-
+//before each test clear db
   beforeEach(async () => {
     await db.admin.clear()
   })
-
+//each test describe
   it('list empty', async () => {
     // Return an empty channel list by default
     const { body: channels } = await supertest(app)
@@ -26,7 +26,7 @@ describe('channels', () => {
     const { body: channels } = await supertest(app)
       .get('/channels')
       .expect(200)
-
+    //check return value
     channels.should.match([{
       id: /^\w+-\w+-\w+-\w+-\w+$/,
       name: 'channel 1',
@@ -70,7 +70,7 @@ describe('channels', () => {
     const { body: channel1 } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: ['admin@example.com'] })
-    // Check it was correctly inserted
+    // delete it
     const { body: channel } = await supertest(app)
       .delete(`/channels/${channel1.id}`)
       .expect(200)
@@ -83,8 +83,9 @@ describe('channels', () => {
     const { body: channel1 } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: ['admin@example.com'] })
-    // Check it was correctly inserted
+    // Change channel name
     channel1.name = 'nvx'
+    // Edit channel
     const { body: channel } = await supertest(app)
       .put(`/channels/${channel1.id}`)
       .send({ name: channel1.name, users: channel1.users })
@@ -97,11 +98,12 @@ describe('channels', () => {
     const { body: channel1 } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: [] })
-    // Check it was correctly inserted 'admin@example.com'
+    // create users
     const users = [
       'admin@example.com',
       'qql@autre.com'
     ]
+    //add users in
     const { body: channel } = await supertest(app)
       .put(`/channels/${channel1.id}/users`)
       .send({ users })
@@ -114,7 +116,7 @@ describe('channels', () => {
     const { body: channel1 } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: ['admin@example.com'] })
-    // Check it was correctly inserted
+    // delete a user from channel
     const { body: channel } = await supertest(app)
       .delete(`/channels/${channel1.id}/user/${channel1.users[0]}`)
       .expect(200)
@@ -127,7 +129,7 @@ describe('channels', () => {
       .send({ name: 'channel 1' })
       .expect(403)
     channel1.should.eql('')
-    // Check it was correctly inserted
+    // Check can't delete
   })
 
   it('cannot add user to channel twice', async () => {
@@ -135,9 +137,9 @@ describe('channels', () => {
     const { body: channel1 } = await supertest(app)
       .post('/channels')
       .send({ name: 'channel 1', users: ['admin@example.com'] })
-
+    //create a user
     const users = ['admin@example.com']
-
+    //check can't add user twice in the channel
     const { body: channel } = await supertest(app)
       .put(`/channels/${channel1.id}/users`)
       .send({ users })

@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Component to send a message */
 import { useState, useContext } from 'react'
 import axios from 'axios';
 
@@ -11,7 +12,7 @@ import { useTheme } from '@mui/styles';
 //Context
 import Context from '../Contexts/Context';
 
-
+//set styles
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
   const borderColor = theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
@@ -36,9 +37,11 @@ export default function Form({
   addMessage,
   channel,
 }) {
+  //set variables
   const [content, setContent] = useState('')
   const { oauth, } = useContext(Context)
   const styles = useStyles(useTheme())
+  //function to add a message to db when submited
   const onSubmit = async () => {
     const { data: message } = await axios.post(
       `http://localhost:3001/channels/${channel.id}/messages`
@@ -53,6 +56,7 @@ export default function Form({
     addMessage(message)
     setContent('')
   }
+  //change value in the textfield
   const handleChange = (e) => {
     setContent(e.target.value)
   }
