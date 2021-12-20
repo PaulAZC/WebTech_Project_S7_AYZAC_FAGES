@@ -1,8 +1,11 @@
-import { Button, Grid, TextField, Snackbar, Alert} from '@mui/material';
-import { useTheme } from '@mui/styles';
+/** @jsxImportSource @emotion/react */
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// Layout MUI
+import { Button, Grid, TextField, Snackbar, Alert } from '@mui/material';
+import { useTheme } from '@mui/styles';
 
 const useStyles = (theme) => ({
     grid: {
@@ -11,46 +14,46 @@ const useStyles = (theme) => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",   
-        font:"2em bold"     
+        alignItems: "center",
+        font: "2em bold"
     },
-    root:{
+    root: {
         width: "50%"
     },
 })
 
-export default function Register(){
+export default function Register() {
     const theme = useTheme()
     const styles = useStyles(theme)
     const navigate = useNavigate()
     //const {oauth, setOauth} = useContext(Context)
-    const [email,setEmail] = useState('')
-    const [fname,setFirst] = useState('')
-    const [lname,setLast] = useState('')
-    const [sever, setSever] = useState({severity: 'success', message:'User created !'})
+    const [email, setEmail] = useState('')
+    const [fname, setFirst] = useState('')
+    const [lname, setLast] = useState('')
+    const [sever, setSever] = useState({ severity: 'success', message: 'User created !' })
     const [state, setState] = useState({
         open: false,
         vertical: 'bottom',
         horizontal: 'left',
     });
-    
+
     const { vertical, horizontal, open } = state;
 
     const handleClick = (newState) => {
-        setState({open: true, ...newState});
+        setState({ open: true, ...newState });
     };
-    
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setState({...state, open: false});
+        setState({ ...state, open: false });
     };
 
-    const register = async (e) =>{
+    const register = async (e) => {
         e.preventDefault()
         //setOauth(email)
-        try{
+        try {
             await axios.post('http://localhost:3001/users', {
                 email: email,
                 firstName: fname,
@@ -58,17 +61,17 @@ export default function Register(){
                 channels: [],
                 gravatar: false
             })
-            setSever({severity: 'success', message:'User created !'})
+            setSever({ severity: 'success', message: 'User created !' })
         }
-        catch(err){
-            setSever({severity: 'error', message:'Error on creation !'})
+        catch (err) {
+            setSever({ severity: 'error', message: 'Error on creation !' })
         }
         setEmail('')
         setFirst('')
         setLast('')
-        handleClick({vertical: 'bottom', horizontal: 'left'})
+        handleClick({ vertical: 'bottom', horizontal: 'left' })
     }
-    return(
+    return (
         <div>
             <Grid
                 container
@@ -82,13 +85,13 @@ export default function Register(){
                 </Grid>
                 <form onSubmit={register}>
                     <Grid style={styles.grid}>
-                        <TextField id="standard-basic" label="Email" type="email" variant="standard" size="medium" value={email} onChange={(e)=>setEmail(e.target.value)} required/>
+                        <TextField id="standard-basic" label="Email" type="email" variant="standard" size="medium" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </Grid>
                     <Grid style={styles.grid}>
-                        <TextField id="standard-basic" label="First Name" variant="standard" size="medium" value={fname} onChange={(e)=>setFirst(e.target.value)} required/>
+                        <TextField id="standard-basic" label="First Name" variant="standard" size="medium" value={fname} onChange={(e) => setFirst(e.target.value)} required />
                     </Grid>
                     <Grid style={styles.grid}>
-                        <TextField id="standard-basic" label="Last Name" variant="standard" size="medium" value={lname} onChange={(e)=>setLast(e.target.value)} required/>
+                        <TextField id="standard-basic" label="Last Name" variant="standard" size="medium" value={lname} onChange={(e) => setLast(e.target.value)} required />
                     </Grid>
                     <Grid style={styles.grid}>
                         <Button variant="contained" size="medium" type='submit'>
@@ -96,10 +99,12 @@ export default function Register(){
                         </Button>
                     </Grid>
                 </form>
-                <Button onClick={(e) => {e.preventDefault()
-                    navigate(`/`)}}>Go Back</Button>
+                <Button onClick={(e) => {
+                    e.preventDefault()
+                    navigate(`/`)
+                }}>Go Back</Button>
             </Grid>
-            <Snackbar anchorOrigin={{vertical, horizontal}} open={open} autoHideDuration={6000} onClose={handleClose} key={vertical + horizontal}>
+            <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose} key={vertical + horizontal}>
                 <Alert onClose={handleClose} severity={sever.severity} sx={{ width: '100%' }}>
                     {sever.message}
                 </Alert>

@@ -1,20 +1,23 @@
 
 /** @jsxImportSource @emotion/react */
 import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext, useState } from 'react'
+
 // Layout
 import { useTheme } from '@mui/styles';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+
 // Markdown
 import { unified } from 'unified'
 import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
 import html from 'rehype-stringify'
 
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CheckIcon from '@mui/icons-material/Check';
-
+// Context
 import Context from '../Context';
+
 // Time
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
@@ -88,7 +91,7 @@ const useStyles = (theme) => ({
     justifyContent: "space-between",
     transition: "0.5s",
   },
-  button:{
+  button: {
     display: "flex",
     flexDirection: "column"
   }

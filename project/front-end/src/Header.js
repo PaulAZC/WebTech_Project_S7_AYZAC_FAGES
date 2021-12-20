@@ -2,24 +2,27 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useState } from 'react';
 import * as React from 'react';
-// Layout
+
+// Layout MUI
 import { useTheme } from '@mui/styles';
-import Context from './Context';
-import { Avatar, Link } from '@mui/material';
+import { Avatar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import Gravatar from 'react-gravatar'
 import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PanToolIcon from '@mui/icons-material/PanTool';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import avatar1 from './static/images/avatar_1.png'
 import avatar2 from './static/images/avatar_2.png'
 import avatar3 from './static/images/avatar_3.png'
 import avatar4 from './static/images/avatar_4.png'
+
+// Gravatar
+import Gravatar from 'react-gravatar'
+
+// Context
+import Context from './Context';
 
 const useStyles = (theme) => ({
   avatar: {
@@ -36,7 +39,7 @@ const useStyles = (theme) => ({
   menuChannel: {
     display: 'flex',
     flexDirection: 'row',
-    margin: 6
+    width: "20%",
   },
   link: {
     color: "#f0f0f0",
@@ -97,9 +100,7 @@ export default function Header() {
     setAnchorEl(null);
   };
   const [value, setValue] = React.useState('recents');
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
   return (
     <header css={styles.header}>
       <div style={styles.menuChannel}>
@@ -134,22 +135,6 @@ export default function Header() {
             onClick={(e) => {
               e.preventDefault()
               navigate(`/channels/create`)
-            }}
-          />
-          <BottomNavigationAction
-            label="Add a friend"
-            value="addPerson"
-            sx={{ color: "#f0f0f0" }}
-            icon={<PersonAddIcon sx={{ color: "#f0f0f0" }} />}
-          />
-          <BottomNavigationAction
-            label="Settings"
-            value="settings"
-            sx={{ color: "#f0f0f0" }}
-            icon={<SettingsIcon sx={{ color: "#f0f0f0" }} />}
-            onClick={(e) => {
-              e.preventDefault()
-              navigate(`/settings`)
             }}
           />
         </BottomNavigation>

@@ -7,10 +7,10 @@ const config = {
   port: 3001
 };
 var usr;
-(async function() {
+(async function () {
   await db.admin.clear();
   await app.listen(config.port);
-  
+
   await Promise.all([{
       email: "clement@email.com",
       firstName: "clement",
@@ -55,7 +55,7 @@ var usr;
   }))
   await Promise.all([{
     name: 'Channel 1',
-    users:['ayzacp@gmail.com'],
+    users: ['ayzacp@gmail.com'],
     messages: [{
       author: 'sergei',
       creation: 1602831101929,
@@ -88,8 +88,8 @@ var usr;
       |                  Footer                    |
       +--------------------------------------------+
       \`\`\`
-      `.replace(/^ {6}/gm,''),
-    },{
+      `.replace(/^ {6}/gm, ''),
+    }, {
       author: 'david',
       creation: 1602832138892,
       content: `
@@ -98,8 +98,8 @@ var usr;
       Give it some styles, use CSS to make it looks good. Possible source of
       improvements include changing the colors, replacing the HTML "send" button
       with an icon, working on the header, providing day/night themes ... be creative
-      `.replace(/^ {6}/gm,''),
-    },{
+      `.replace(/^ {6}/gm, ''),
+    }, {
       author: 'sergei',
       creation: 1602840139202,
       content: `
@@ -112,8 +112,8 @@ var usr;
       for many years to accomplish date formatting. Read what is displayed on the
       top right corner of their homepage, it is now depreciated. Read the reasons
       and act accordingly.
-      `.replace(/^ {6}/gm,''),
-    },{
+      `.replace(/^ {6}/gm, ''),
+    }, {
       author: 'david',
       creation: 1602844139200,
       content: `
@@ -130,62 +130,62 @@ var usr;
   
       Consider adding syntax highlight support with a library like
       [Prism](https://prismjs.com/).
-      `.replace(/^ {6}/gm,'').replace(/^ {6}/gm,''),
+      `.replace(/^ {6}/gm, '').replace(/^ {6}/gm, ''),
     }]
-  },{
+  }, {
     name: 'Channel 2',
-    users:['clement.fages@edu.ece.fr'],
+    users: ['clement.fages@edu.ece.fr'],
     messages: [{
       author: 'sergei',
       creation: 1602223579200,
       content: `
       Ping
-      `.replace(/^ {6}/gm,'')
-    },{
+      `.replace(/^ {6}/gm, '')
+    }, {
       author: 'david',
       creation: 1602523579200,
       content: `
       Pong
-      `.replace(/^ {6}/gm,'')
+      `.replace(/^ {6}/gm, '')
     }]
-  },{
+  }, {
     name: 'Channel 3',
-    users:[],
+    users: [],
     messages: [{
       author: 'sergei',
       creation: 1602223579200,
       content: `
       What is the answer to the Ultimate Question of Life, the Universe and Everything ?
-      `.replace(/^ {6}/gm,'')
-    },{
+      `.replace(/^ {6}/gm, '')
+    }, {
       author: 'david',
       creation: 1602523579200,
       content: `
       42
-      `.replace(/^ {6}/gm,'')
+      `.replace(/^ {6}/gm, '')
     }]
-  }].map( async (channel,i) => {
+  }].map(async (channel, i) => {
     await axios.post(`http://localhost:${config.port}/channels`, {
       name: channel.name,
       users: channel.users
     })
-    .then(async res => {
-      if(i==0){
-        usr = "ayzacp@gmail.com"
-        await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
-          user: usr
-        })
-      }
-      else if(i==1){
-        usr = "clement.fages@edu.ece.fr"
-        await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`,{
-          user: usr
-        })
-      }
-      return Promise.all( channel.messages.map( async (message) => {
-        await axios.post(`http://localhost:${config.port}/channels/${res.data.id}/messages`, message)
-      }))
-    })
+      .then(async res => {
+        if (i == 0) {
+          usr = "ayzacp@gmail.com"
+          await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`, {
+            user: usr
+          })
+        }
+        else if (i == 1) {
+          usr = "clement.fages@edu.ece.fr"
+          await axios.post(`http://localhost:${config.port}/users/channel/${res.data.id}`, {
+            user: usr
+          })
+        }
+        return Promise.all(channel.messages.map(async (message) => {
+          await axios.post(`http://localhost:${config.port}/channels/${res.data.id}/messages`, message)
+        }))
+      })
   }))
   
   process.exit()

@@ -2,15 +2,16 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-// Layout
+// Layout MUI
 import { Button } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-// Local
-import Context from './Context'
-import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/styles';
 import { Avatar, Badge } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
+// Local
+import Context from './Context';
+import { useNavigate } from 'react-router-dom';
+
 import Gravatar from 'react-gravatar';
 import avatar1 from './static/images/avatar_1.png'
 import avatar2 from './static/images/avatar_2.png'

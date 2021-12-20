@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useCookies } from 'react-cookie'
 
 const Context = React.createContext()
@@ -23,7 +23,7 @@ export const Provider = ({
         setCookie('gravatar',grav)
       },
       setOauth: (oauth, id) => {
-        if(oauth){
+        if (oauth) {
           const payload = JSON.parse(
             Buffer.from(
               oauth.id_token.split('.')[1], 'base64'
@@ -32,7 +32,7 @@ export const Provider = ({
           oauth.email = payload.email
           oauth.id = id
           setCookie('oauth', oauth)
-        }else{
+        } else {
           setCurrentChannel(null)
           setChannels([])
           removeCookie('oauth')
@@ -46,7 +46,7 @@ export const Provider = ({
       setChannels: setChannels,
       currentChannel: currentChannel,
       setCurrentChannel: (channelId) => {
-        const channel = channels.find( channel => channel.id === channelId)
+        const channel = channels.find(channel => channel.id === channelId)
         setCurrentChannel(channel)
       },
     }}>{children}</Context.Provider>
