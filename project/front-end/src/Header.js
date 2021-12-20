@@ -66,7 +66,6 @@ export default function Header() {
   const [avatar, setAvatar] = useState()
 
   React.useEffect(()=>{
-    console.log("header "+gravatar)
     if(gravatar==false)
       setAvatar(<Gravatar email={oauth.email} sx={{ width: 30, height: 30 }} onClick={handleClick}/>)
     else{
@@ -75,7 +74,6 @@ export default function Header() {
             setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
             break;
         case "2":
-          console.log("la")
             setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
             break;
         case "3":
