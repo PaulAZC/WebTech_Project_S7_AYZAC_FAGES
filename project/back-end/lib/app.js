@@ -37,7 +37,8 @@ app.post('/channels', async (req, res) => {
 
 app.get('/channels/:id', async (req, res) => {//peut etre rajouter channel =
   try{
-    await db.channels.get(req.params.id)
+    const channel = await db.channels.get(req.params.id)
+    console.log(channel)
     res.status(200).json(channel)
   }
   catch(err){
@@ -169,14 +170,15 @@ app.get('/user/:email', async (req, res) => {
   }
 })
 
-app.get('/userId/:id', async (req, res) => {
+app.get('/userId/:id', authenticate, async (req, res) => {
   const user = await db.users.getId(req.params.id)
   res.status(200).json(user)
 })
 
-app.put('/users/:id', async (req, res) => {
+app.put('/users/:id', authenticate, async (req, res) => {
   try{
-    const user = await db.users.update(req.params.id,req.body)
+    const userTemp = await db.users.get(req.user.email)
+    const user = await db.users.update(userTemp.id,req.body)
     res.status(200).json(user)
   }catch(err){
     res.status(403).json(err)
