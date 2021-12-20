@@ -2,10 +2,10 @@ name: Project CI/CD
 
 on:
   push:
-    branches: [ clement, paul ]
+    branches: [ paul ]
   pull_request:
     branches: [ master ]
-#Test
+
 jobs:
   # CI part
   test-back:
