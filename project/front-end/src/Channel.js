@@ -249,7 +249,6 @@ export default function Channel() {
         console.log('test',res)
         if(res.data===''){
           setOauth(null)
-          navigate('/oups')
         }
         else{
           var n = window.location.href.lastIndexOf('/');

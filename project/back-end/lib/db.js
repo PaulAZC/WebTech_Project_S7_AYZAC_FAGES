@@ -21,8 +21,8 @@ module.exports = {
     get: async (id) => {
       let channel;
       if(!id) throw Error('Invalid id')
-      await new Promise(async (resolve,reject) => {
-        await db.get(`channels:${id}`,(err,res) => {
+      return await new Promise((resolve,reject) => {
+        db.get(`channels:${id}`,(err,res) => {
           try{
             if(!res) throw Error('Not existing channel')
             else{
