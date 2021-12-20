@@ -250,7 +250,6 @@ export default function Channel() {
         }
       })
       .then(res => {
-        console.log('test', res)
         if (res.data === '') {
           setOauth(null)
         }
