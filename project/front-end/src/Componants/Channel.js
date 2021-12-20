@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Component that displays all the useful */
 import { useContext, useRef, useState, useEffect } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import axios from 'axios';
@@ -20,7 +21,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 // Context
 import Context from '../Contexts/Context'
-
+//set styles
 const useStyles = (theme) => ({
   root: {
     height: '100%',
@@ -55,6 +56,7 @@ const useStyles = (theme) => ({
 })
 
 export default function Channel() {
+  //initialize all useful variables
   const navigate = useNavigate()
   const { id } = useParams()
   const { channels, setChannels, oauth, setOauth } = useContext(Context)
@@ -79,30 +81,30 @@ export default function Channel() {
 
   const open2 = Boolean(anchorEl);
   const id2 = open2 ? 'simple-popper' : undefined;
-
+  //open drawer to see users
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
+  //close drawer
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  //display add user element
   const handleClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
-
+  //open snackbar
   const handleOpen = (newState) => {
     setState({ open: true, ...newState });
   };
-
+  //close snackbar
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setState({ ...state, open: false });
   };
-
+  //function to delete a user from a channel and the channel form a user
   const leaveChannel = async () => {
     const data = channels.filter(i => i.id !== channel.id)
     setChannels(data);
@@ -127,7 +129,7 @@ export default function Channel() {
       });
     navigate('/channels')
   }
-
+  //function to remove a message
   const removeMessage = async (messages, item) => {
     setMessages(messages)
     await axios.delete(`http://localhost:3001/channels/${channel.id}/message/${item.creation}`, {
@@ -136,7 +138,7 @@ export default function Channel() {
       }
     })
   }
-
+  //function to edit a message
   const editMessage = async (i, message) => {
     let newArr = [...messages];
     newArr[i] = message;
@@ -149,11 +151,11 @@ export default function Channel() {
       },
     });
   }
-
+  //function to add a message
   const addMessage = async (message) => {
     setMessages([...messages, message])
   }
-
+  //add people to the channel
   const addPeople = (e) => {
     e.preventDefault()
     var regExp = /\(([^)]+)\)/;
@@ -202,7 +204,7 @@ export default function Channel() {
       setChooseUser([])
     }
   }
-
+  //get all message of the channel we are in
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -221,7 +223,7 @@ export default function Channel() {
     }
     fetch()
   }, [id, oauth, navigate])
-
+  //get all users if we want to add some of them
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -241,11 +243,11 @@ export default function Channel() {
     if (channel)
       fetch()
   }, [channel, oauth])
-
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown)
   }
   // On refresh, context.channel is not yet initialized
+  //if channel is not found, check if user can access it and if he can't it redirects him to /oups otherwise he waits for data
   if (!channel) {
     const check = async () => {
       await axios.get(`http://localhost:3001/user/${oauth.email}/channels`, {
@@ -268,6 +270,7 @@ export default function Channel() {
     check()
     return (<div>loading</div>)
   }
+  //return layout
   return (
     <div css={styles.root}>
       <AppBar position="static" open={open}

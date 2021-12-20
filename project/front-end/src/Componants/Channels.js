@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Component to display the different channels */
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -22,13 +23,13 @@ import avatar2 from '../static/images/avatar_2.png'
 import avatar3 from '../static/images/avatar_3.png'
 import avatar4 from '../static/images/avatar_4.png'
 
-
+//set style small avatar
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 10,
   height: 10,
   border: `1px solid`,
 }));
-
+//set styles
 const useStyles = (theme) => ({
   root: {
     backgroundColor: '#f0f0f0',
@@ -54,14 +55,14 @@ const useStyles = (theme) => ({
 })
 
 export default function Channels() {
-
+  //get/set values
   const {
     oauth,
     channels, setChannels, gravatar
   } = useContext(Context)
   const naviate = useNavigate();
   const [avatar, setAvatar] = useState()
-
+  //Get gravatar of the user
   useEffect(() => {
 
     if(gravatar===false)
@@ -84,7 +85,7 @@ export default function Channels() {
             break;
       }
     }
-
+    //function to get all channels
     const fetch = async () => {
       try {
         const { data: channels } = await axios.get('http://localhost:3001/channels', {
@@ -100,6 +101,7 @@ export default function Channels() {
     fetch()
   }, [oauth, setChannels])
   const styles = useStyles(useTheme())
+  //return layout with all the different channels
   return (
     <ul css={styles.root}>
       {channels.map((channel, i) => (

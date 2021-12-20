@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Create main component */
 import { useContext, useEffect } from 'react'
 import axios from 'axios';
 import {
@@ -19,7 +20,7 @@ import Channel from './Channel'
 import Welcome from './Welcome'
 import NewChannel from './NewChannel'
 
-
+//set styles
 const useStyles = (theme) => ({
   root: {
     backgroundColor: '#f0f0f0',
@@ -50,7 +51,7 @@ export default function Main() {
   const styles = useStyles(theme)
   const alwaysOpen = useMediaQuery(theme.breakpoints.up('sm'))
   const isDrawerVisible = alwaysOpen || drawerVisible
-
+  //get a user with his email -> here we check if he is connected (not entered in the app without tokens)
   useEffect(() => {
     const fetch = async () => {
       await axios.get(`http://localhost:3001/user/${oauth.email}`)
@@ -62,7 +63,7 @@ export default function Main() {
     }
     fetch()
   }, [oauth.email, setOauth])
-
+//return layout with respsonsive drawer for channels list and a route that displays component according to url and action
   return (
     <main css={styles.root}>
       <Drawer

@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* display header of application */
 import { useContext, useState } from 'react';
 import * as React from 'react';
 
@@ -26,6 +27,7 @@ import Gravatar from 'react-gravatar'
 // Context
 import Context from '../Contexts/Context';
 
+//set styles
 const useStyles = (theme) => ({
   avatar: {
     margin: "5px 10px 5px 5px"
@@ -55,7 +57,9 @@ const useStyles = (theme) => ({
   },
 })
 
+//export default header
 export default function Header() {
+  //set necessary variables
   const styles = useStyles(useTheme())
   const {
     oauth, setOauth, gravatar
@@ -64,9 +68,12 @@ export default function Header() {
     e.stopPropagation()
     setOauth(null)
   }
-
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
   const [avatar, setAvatar] = useState()
-
+  const [value, setValue] = React.useState('recents');
+  //set the avatar according to the gravatar value of the user
   React.useEffect(()=>{
     if(gravatar==false)
       setAvatar(<Gravatar email={oauth.email} sx={{ width: 30, height: 30 }} onClick={handleClick}/>)
@@ -89,18 +96,15 @@ export default function Header() {
       }
     }
   },[gravatar,oauth.email])
-
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  //open menu
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  //close menu
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const [value, setValue] = React.useState('recents');
-
+  //return layout
   return (
     <header css={styles.header}>
       <div style={styles.menuChannel}>

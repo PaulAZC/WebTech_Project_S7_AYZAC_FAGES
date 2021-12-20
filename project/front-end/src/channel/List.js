@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Component that gets all the messages */
 import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useContext, useState } from 'react'
 
 // Layout
@@ -30,9 +31,7 @@ dayjs.updateLocale('en', {
     sameElse: 'DD/MM/YYYY hh:mm A'
   }
 })
-
-
-
+//set styles
 const useStyles = (theme) => ({
   root: {
     position: 'relative',
@@ -104,6 +103,7 @@ export default forwardRef(({
   removeMessage,
   editMessage
 }, ref) => {
+  //set variables
   const styles = useStyles(useTheme())
   const { oauth, } = useContext(Context)
   const [actValue, setValue] = useState()
@@ -134,21 +134,21 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
-
+  //delete a message and call parent props
   const clickDelete = (message) => {
     const data = messages.filter(i => i.creation !== message.creation)
     removeMessage(data, message)
   }
-
+  //edit a message
   const clickEdit = (index, message) => {
     setClicked(index)
     setValue(message.content)
   }
-
+  //change value of the message
   const handleChange = (e) => {
     setValue(e.target.value)
   }
-
+  //edit a message on component and call parent props
   const changeEdit = (i, sms) => {
     sms.content = actValue
     editMessage(i, sms)

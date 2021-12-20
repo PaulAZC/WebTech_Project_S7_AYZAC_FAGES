@@ -1,5 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
+/* Component to manage login with dex */
 import { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
@@ -17,7 +18,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 // Local contexte
 import Context from '../Contexts/Context'
 
-
+//encode functions
 const base64URLEncode = (str) => {
   return str.toString('base64')
     .replace(/\+/g, '-')
@@ -31,7 +32,7 @@ const sha256 = (buffer) => {
     .update(buffer)
     .digest()
 }
-
+//set styles
 const useStyles = (theme) => ({
   button: {
     marginBottom: theme.spacing(4)
@@ -58,7 +59,7 @@ const useStyles = (theme) => ({
     },
   },
 })
-
+// redirect user to dex to connect
 const Redirect = ({
   config,
   codeVerifier,
@@ -92,7 +93,7 @@ const Redirect = ({
     </div>
   )
 }
-
+//display the finale component once connected with disconnected option
 const Tokens = ({
   oauth
 }) => {
@@ -111,7 +112,8 @@ const Tokens = ({
     </div>
   )
 }
-
+//load token and set tokens in cookies + context
+//remove token no more used
 const LoadToken = ({
   code,
   codeVerifier,
@@ -141,8 +143,10 @@ const LoadToken = ({
             data.id_token.split('.')[1], 'base64'
           ).toString('utf-8')
         )
+        //get user from db
         await axios.get(`http://localhost:3001/user/${payload.email}`)
           .then(async res => {
+            //if user doesn't exist we create him
             if (res.data === "" || res.data == null) {
               await axios.post('http://localhost:3001/users', {
                 email: payload.email,
@@ -162,6 +166,7 @@ const LoadToken = ({
             })
           }
           else{
+            //cookies and avatar
             setCookie('gravatar',res.data.gravatar)
             setOauth(data, res.data.id)
             setGravatar(res.data.gravatar)
