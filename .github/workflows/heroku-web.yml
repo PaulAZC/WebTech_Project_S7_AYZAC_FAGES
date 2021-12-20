@@ -1,0 +1,17 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: 3328f7a8-af1c-47c7-ad51-ddd53d544a01
+          heroku_app_name: "devopsprojecteceparis" #Must be unique in Heroku
+          heroku_email: "ayzacp@gmail.com"
