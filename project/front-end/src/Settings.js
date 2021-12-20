@@ -56,18 +56,96 @@ const Input = styled('input')({
 
 export default function Settings() {
     const [name,setName] = useState()
+    const [gravatar, setGravatar] = useState()
+    const [avatar,setAvatar] = useState()
     const [first,setFirst] = useState()
-    const [channels,setChannels] = useState([])
     const [chan,setChanUser] = useState()
     const [hold,setHold] = useState([])
     const [edit,setEdit] = useState(true)
     const styles = useStyles(useTheme())
     const {
-        oauth, setOauth,
+        oauth, setGrav
     } = useContext(Context)
     const [expanded, setExpanded] = useState(false);
 
     const [open, setOpen] = useState(false);
+
+    const changeAvatar = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 1
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(1)
+        setOpen(false)
+        setGrav('1')
+    }
+
+    const changeAvatar1 = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 2
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(2)
+        setOpen(false)
+        setGrav('2')
+    }
+
+    const changeAvatar2 = async (e) => {
+        setGravatar(3)
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 3
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(3)
+        setOpen(false)
+        setGrav('3')
+    }
+
+    const changeAvatar3 = async (e) => {
+        e.preventDefault()
+        setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />)
+        await axios.put(`http://localhost:3001/users/${oauth.id}`,{
+            email: oauth.email,
+            firstName: first,
+            lastName: name,
+            channels: chan,
+            gravatar: 4
+        },{
+            headers: {
+              'Authorization': `Bearer ${oauth.access_token}`
+            },
+        })
+        setGravatar(4)
+        setOpen(false)
+        setGrav('4')
+    }
 
     useEffect(()=>{
         const fetch = async () => {
@@ -77,22 +155,44 @@ export default function Settings() {
                   }
             })
             .then(res => {
-                setChannels([])
+                setGravatar(res.data.gravatar)
                 setName(res.data.lastName)
                 setFirst(res.data.firstName)
                 setChanUser(res.data.channels)
                 setHold([res.data.firstName,res.data.lastName])
+                
+                if(gravatar===false)
+                    setAvatar(<Gravatar email={oauth.email} size={150}/>)
+                else{
+                    switch(gravatar){
+                        case 1:
+                            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />)
+                            break;
+                        case 2:
+                            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />)
+                            break;
+                        case 3:
+                            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />)
+                            break;
+                        case 4:
+                            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />)
+                            break;
+                        default:
+                            break;
+                    }
+                }
             })
         }
         fetch()
-    },[])
+    },[gravatar])
 
     const editUser = async () =>{
         await axios.put(`http://localhost:3001/users/${oauth.id}`,{
             email: oauth.email,
             firstName: first,
             lastName: name,
-            channels: chan
+            channels: chan,
+            gravatar: gravatar
         },{
             headers: {
               'Authorization': `Bearer ${oauth.access_token}`
@@ -155,12 +255,15 @@ export default function Settings() {
                         <Typography sx={{ width: '33%', flexShrink: 0, color: '#326e61' }}>Avatar</Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Avatar sx={{ width: 150, height: 150 }}>
-                            <Gravatar
-                                email={oauth.email}
-                                size={150}
-                            />
-                        </Avatar>
+                        {gravatar ?
+                            (<div sx={{ width: 100, height: 100 }}>
+                                {avatar}
+                            </div>)
+                            :
+                            (<Avatar sx={{ width: 100, height: 100 }}>
+                                {avatar}
+                            </Avatar>)
+                        }
                         <div style={styles.avatarButton}>
                             <Button
                                 variant='contained'
@@ -186,16 +289,16 @@ export default function Settings() {
                                 aria-describedby="alert-dialog-slide-description"
                             >
                                 <DialogContent>
-                                    <Button>
+                                    <Button onClick={changeAvatar}>
                                         <Avatar alt='avatar1' src={avatar1} sx={{ width: 100, height: 100 }} />
                                     </Button>
-                                    <Button>
+                                    <Button onClick={changeAvatar1}>
                                         <Avatar alt='avatar2' src={avatar2} sx={{ width: 100, height: 100 }} />
                                     </Button>
-                                    <Button>
+                                    <Button onClick={changeAvatar2}>
                                         <Avatar alt='avatar3' src={avatar3} sx={{ width: 100, height: 100 }} />
                                     </Button>
-                                    <Button>
+                                    <Button onClick={changeAvatar3}>
                                         <Avatar alt='avatar4' src={avatar4} sx={{ width: 100, height: 100 }} />
                                     </Button>
                                 </DialogContent>

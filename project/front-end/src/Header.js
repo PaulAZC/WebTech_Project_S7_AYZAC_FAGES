@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import * as React from 'react';
 // Layout
 import { useTheme } from '@mui/styles';
@@ -16,7 +16,10 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-
+import avatar1 from './static/images/avatar_1.png'
+import avatar2 from './static/images/avatar_2.png'
+import avatar3 from './static/images/avatar_3.png'
+import avatar4 from './static/images/avatar_4.png'
 
 const useStyles = (theme) => ({
   avatar: {
@@ -50,12 +53,40 @@ const useStyles = (theme) => ({
 export default function Header() {
   const styles = useStyles(useTheme())
   const {
-    oauth, setOauth,
+    oauth, setOauth, gravatar
   } = useContext(Context)
   const onClickLogout = (e) => {
     e.stopPropagation()
     setOauth(null)
   }
+
+  const [avatar, setAvatar] = useState()
+
+  React.useEffect(()=>{
+    console.log("header "+gravatar)
+    if(gravatar===false)
+      setAvatar(<Gravatar email={oauth.email} sx={{ width: 30, height: 30 }} onClick={handleClick}/>)
+    else{
+      switch(gravatar){
+        case "1":
+            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
+            break;
+        case "2":
+          console.log("la")
+            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
+            break;
+        case "3":
+            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
+            break;
+        case "4":
+            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 40, height: 40 }} onClick={handleClick}/>)
+            break;
+        default:
+            break;
+      }
+    }
+  },[gravatar,oauth.email])
+
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -125,13 +156,15 @@ export default function Header() {
       </div>
       <div style={styles.header}>
         <ExpandMoreIcon onClick={handleClick} sx={{ marginTop: "5px" }} />
-        <Avatar style={styles.avatar}>
-          <Gravatar
-            email={oauth.email}
-            sx={{ width: 30, height: 30 }}
-            onClick={handleClick}
-          />
-        </Avatar>
+          {gravatar ?
+            (<div style={styles.avatar}>
+                {avatar}
+            </div>)
+            :
+            (<Avatar style={styles.avatar}>
+                {avatar}
+            </Avatar>)
+          }
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}

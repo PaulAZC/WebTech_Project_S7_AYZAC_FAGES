@@ -55,7 +55,8 @@ export default function Register(){
                 email: email,
                 firstName: fname,
                 lastName: lname,
-                channels: []
+                channels: [],
+                gravatar: false
             })
             setSever({severity: 'success', message:'User created !'})
         }

@@ -267,7 +267,8 @@ module.exports = {
               email: usemail.user,
               firstName: user.firstName,
               lastName: user.lastName,
-              channels: user.channels
+              channels: user.channels,
+              gravatar: user.gravatar
             }))
           }
         }).on( 'error', (err) => {
@@ -291,7 +292,8 @@ module.exports = {
               email: res.email,
               firstName: res.firstName,
               lastName: res.lastName,
-              channels: res.channels
+              channels: res.channels,
+              gravatar: res.gravatar
             }))
             resolve()
           }catch(err){

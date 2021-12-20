@@ -15,35 +15,42 @@ var usr;
       email: "clement@email.com",
       firstName: "clement",
       lastName: "Fages",
-      channels:[]},
+      channels:[],
+      gravatar: false},
     {
       email: "paul@email.com",
       firstName: "paul",
       lastName: "polo",
-      channels: []},
+      channels: [],
+      gravatar: false},
     {
       email: "truc@email.com",
       firstName: "truc",
       lastName: "muche",
-      channels: []},
+      channels: [],
+      gravatar: false},
     { email: "antoine@email.com",
       firstName: "antoine",
       lastName: "nette",
-      channels: []},
+      channels: [],
+      gravatar: false},
     { email: "clement.fages@edu.ece.fr",
       firstName: "Clement",
       lastName: "Fages",
-      channels: []},
+      channels: [],
+      gravatar: false},
     { email: "ayzacp@gmail.com",
       firstName: "Paul",
       lastName: "Ayzac",
-      channels: []},
+      channels: [],
+      gravatar: false},
   ].map( async (user) => {
     const {data: {id}} = await axios.post(`http://localhost:${config.port}/users`, {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      channels: user.channels
+      channels: user.channels,
+      gravatar: user.gravatar
     })
   }))
   await Promise.all([{
@@ -180,5 +187,6 @@ var usr;
       }))
     })
   }))
+  
   process.exit()
 })();
