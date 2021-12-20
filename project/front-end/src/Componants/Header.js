@@ -11,18 +11,20 @@ import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import PanToolIcon from '@mui/icons-material/PanTool';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import avatar1 from './static/images/avatar_1.png'
-import avatar2 from './static/images/avatar_2.png'
-import avatar3 from './static/images/avatar_3.png'
-import avatar4 from './static/images/avatar_4.png'
+import CottageIcon from '@mui/icons-material/Cottage';
+
+// Local images
+import avatar1 from '../static/images/avatar_1.png'
+import avatar2 from '../static/images/avatar_2.png'
+import avatar3 from '../static/images/avatar_3.png'
+import avatar4 from '../static/images/avatar_4.png'
 
 // Gravatar
 import Gravatar from 'react-gravatar'
 
 // Context
-import Context from './Context';
+import Context from '../Contexts/Context';
 
 const useStyles = (theme) => ({
   avatar: {
@@ -116,10 +118,10 @@ export default function Header() {
           }}
         >
           <BottomNavigationAction
-            label="Welcome"
-            value="welcomePage"
+            label="Home"
+            value="homePage"
             sx={{ color: "#f0f0f0" }}
-            icon={<PanToolIcon sx={{ color: "#f0f0f0" }} />}
+            icon={<CottageIcon sx={{ color: "#f0f0f0" }} />}
             onClick={(e) => {
               e.preventDefault()
               navigate(`/channels`)
@@ -144,7 +146,7 @@ export default function Header() {
                 {avatar}
             </div>)
             :
-            (<Avatar style={styles.avatar}>
+            (<Avatar style={styles.avatar} onClick={handleClick}>
                 {avatar}
             </Avatar>)
           }

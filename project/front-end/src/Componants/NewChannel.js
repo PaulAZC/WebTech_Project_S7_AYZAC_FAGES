@@ -9,7 +9,7 @@ import { Button, Grid, TextField, Autocomplete, Chip, Snackbar, Alert } from '@m
 import { useTheme } from '@mui/styles';
 
 // Contexte
-import Context from './Context';
+import Context from '../Contexts/Context';
 
 const useStyles = (theme) => ({
     grid: {

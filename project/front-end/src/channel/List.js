@@ -16,7 +16,7 @@ import remark2rehype from 'remark-rehype'
 import html from 'rehype-stringify'
 
 // Context
-import Context from '../Context';
+import Context from '../Contexts/Context';
 
 // Time
 import dayjs from 'dayjs'

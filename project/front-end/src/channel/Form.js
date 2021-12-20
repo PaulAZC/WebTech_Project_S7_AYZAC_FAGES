@@ -9,7 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/styles';
 
 //Context
-import Context from '../Context';
+import Context from '../Contexts/Context';
 
 
 const useStyles = (theme) => {
