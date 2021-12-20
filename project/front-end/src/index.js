@@ -1,30 +1,40 @@
+// React
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CookiesProvider } from 'react-cookie';
-import './index.css';
-import App from './App';
-import { Provider as ContextProvider } from './Context';
-import * as serviceWorker from './serviceWorker';
-import 'typeface-roboto'
-// Layout
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
+// Local
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+// CSS and font
+import './css/index.css';
+import 'typeface-roboto'
+
+// Context
+import { Provider as ContextProvider } from './Context';
+
+
+// Layout
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 const theme = createTheme({
-  typography:{
+  typography: {
     fontFamily: "Roboto",
   },
   spacing: 5,
-  palette:{
-    primary:{
+  palette: {
+    primary: {
       main: "#326e61",
+      red: 'red'
     },
-    secondary:{
+    secondary: {
       main: "#f0f0f0"
     },
-    error:{
+    error: {
       main: "#d1a04f"
     }
   }

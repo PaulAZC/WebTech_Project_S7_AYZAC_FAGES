@@ -1,17 +1,22 @@
 
 /** @jsxImportSource @emotion/react */
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-// Layout
+// Layout MUI
 import { Button } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-// Local
-import Context from './Context'
-import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/styles';
 import { Avatar, Badge } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
+// Local
+import Context from './Context';
+import { useNavigate } from 'react-router-dom';
+
 import Gravatar from 'react-gravatar';
+import avatar1 from './static/images/avatar_1.png'
+import avatar2 from './static/images/avatar_2.png'
+import avatar3 from './static/images/avatar_3.png'
+import avatar4 from './static/images/avatar_4.png'
 
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -48,18 +53,39 @@ export default function Channels() {
 
   const {
     oauth,
-    channels, setChannels
+    channels, setChannels, gravatar
   } = useContext(Context)
   const naviate = useNavigate();
+  const [avatar, setAvatar] = useState()
+
   useEffect(() => {
+
+    if(gravatar===false)
+      setAvatar(<Gravatar email={oauth.email} size={25}/>)
+    else{
+      switch(gravatar){
+        case "1":
+            setAvatar(<Avatar alt='avatar1' src={avatar1} sx={{ width: 25, height: 25 }}/>)
+            break;
+        case "2":
+            setAvatar(<Avatar alt='avatar2' src={avatar2} sx={{ width: 25, height: 25 }}/>)
+            break;
+        case "3":
+            setAvatar(<Avatar alt='avatar3' src={avatar3} sx={{ width: 25, height: 25 }}/>)
+            break;
+        case "4":
+            setAvatar(<Avatar alt='avatar4' src={avatar4} sx={{ width: 25, height: 25 }}/>)
+            break;
+        default:
+            break;
+      }
+    }
+
     const fetch = async () => {
       try {
         const { data: channels } = await axios.get('http://localhost:3001/channels', {
           headers: {
             'Authorization': `Bearer ${oauth.access_token}`
-          },
-          params: {
-            id: oauth.email
           }
         })
         setChannels(channels)
@@ -90,12 +116,15 @@ export default function Channels() {
                 <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
               }
             >
-              <Avatar sx={{ width: 25, height: 25 }}>
-                <Gravatar
-                  email={oauth.email}
-                  size={25}
-                />
-              </Avatar>
+              {gravatar ?
+                (<div>
+                    {avatar}
+                </div>)
+                :
+                (<Avatar>
+                    {avatar}
+                </Avatar>)
+              }
             </Badge>
             {channel.name}
           </Button>

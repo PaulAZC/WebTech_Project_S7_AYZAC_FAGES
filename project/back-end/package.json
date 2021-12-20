@@ -41,6 +41,6 @@
     "reset": "node bin/reset",
     "develop": "node bin/init && node bin/start",
     "start": "node bin/start",
-    "test": "set /a TEST_PAYLOAD_EMAIL=admin@example.com mocha 'test/*/.js'"
+    "test": "TEST_PAYLOAD_EMAIL=admin@example.com mocha 'test/**/*.js'"
   }
 }
