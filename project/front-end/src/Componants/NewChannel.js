@@ -18,8 +18,8 @@ const useStyles = (theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: "100%",
-        padding: 10,
-        marginBottom: "15%"
+        padding: 15,
+        marginBottom: 20
     },
     form: {
         display: 'flex',
