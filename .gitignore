@@ -1,3 +1,7 @@
+# Back
+/back-end/db
+!.gitignore
+
 # Logs
 logs
 *.log

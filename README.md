@@ -1,5 +1,14 @@
 ## Web Technologies Project for the semester 7
-## Authors : Paul AYZAC & Clément FAGES
+### Authors : Paul AYZAC & Clément FAGES
+
+
+
+We did our project on another repository because we literally took what was said in the instruction I quote : "create a repository and share it as a collaborator with your professor". We thought that it was the best way to do whereas what you said in class.
+
+If you want to see the history of all the commits, you can go on this repository : [Repository of Webtech Project with commits](https://github.com/PaulAZC/WebTech_Project_S7_AYZAC_FAGES)
+
+Sorry for the disturb.
+
 ## Links to the content of our project :
 - [1. Description of the project](#1-description-)
 - [2. Specifications](#2-specifications-)
